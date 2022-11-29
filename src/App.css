@@ -36,3 +36,39 @@
     transform: rotate(360deg);
   }
 }
+
+/*Columns*/
+.container .row .col {
+  /*margin-bottom: 50px;*/
+
+}
+
+/*Quill numbering*/
+
+.ql-editor {
+  counter-reset: line;
+  padding-left: 0;
+  overflow: auto;
+  max-height: 70vh;
+  min-height: 70vh;
+}
+
+.ql-editor p:before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  border-right: 1px solid #ddd;
+  padding: 0 .5em;
+  margin-right: .5em;
+  color: #888;
+  width: 40px;
+  text-align: right;
+}
+
+#validation-message {
+  display: inline-block;
+  margin-left: 1.5em;
+  margin-top: 0.5em;
+  background-color: coral;
+  font-size: small;
+}
