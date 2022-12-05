@@ -2,9 +2,10 @@ import {useEffect, useRef} from "react";
 import {basicSetup, EditorView} from "codemirror"
 import {ViewPlugin} from "@codemirror/view"
 import {xml} from "@codemirror/lang-xml"
-import {ChangeSet, EditorState, Text} from "@codemirror/state"
+import {ChangeSet, EditorState, StateEffect, Text} from "@codemirror/state"
 import {Update, receiveUpdates, sendableUpdates, collab, getSyncedVersion} from "@codemirror/collab"
 import {io} from 'socket.io-client'
+import schema from './util/jsonSchema.json'
 
 const socket = io("http://127.0.0.1:5000");
 socket.on("connect", () => {
@@ -24,7 +25,6 @@ function updateExtension(startVersion, sock) {
         constructor(view) {
             this.view = view;
             sock.on("newVersion", updates => {
-
 
                 console.log("These are the updates I just received! " + sock.id)
                 console.log(updates)
@@ -50,18 +50,17 @@ function updateExtension(startVersion, sock) {
 
 export default function CodeMirrorCollab() {
     const editor = useRef();
-    let view = new EditorView({
-        parent: editor.current
-    })
     useEffect(() => {
-        // let view = "";
+        let view = new EditorView({
+            parent: editor.current
+        })
+
         socket.on("firstVersion", (text, version) => {
             console.log(text)
             console.log(version)
             let state = EditorState.create({
-                // doc: "<p>Hello world!</p>",
                 doc: text,
-                extensions: [basicSetup, xml(), updateExtension(version, socket)]
+                extensions: [basicSetup, xml({elements: schema}), updateExtension(version, socket)]
             });
             view.destroy();
             view = new EditorView({
@@ -70,15 +69,8 @@ export default function CodeMirrorCollab() {
             })
         })
 
-        // const view = new EditorView({
-        //     extensions: [basicSetup, xml(), collab()],
-        //     parent: editor.current
-        // })
-
-
         return () => {
             view.destroy();
-            // editor.current.removeEventListener("input", log);
         };
     }, []);
 

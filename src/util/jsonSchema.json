@@ -1,0 +1,1195 @@
+[
+    {
+        "name": "p",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "decls",
+            "part",
+            "hand"
+        ]
+    },
+    {
+        "name": "foreign",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "emph",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "hi",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "hand"
+        ]
+    },
+    {
+        "name": "distinct",
+        "attributes": [
+            "type",
+            "time",
+            "space",
+            "social",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "subtype"
+        ]
+    },
+    {
+        "name": "said",
+        "attributes": [
+            "aloud",
+            "direct",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "who",
+            "toWhom"
+        ]
+    },
+    {
+        "name": "quote",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "type",
+            "subtype"
+        ]
+    },
+    {
+        "name": "q",
+        "attributes": [
+            "type",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "who",
+            "toWhom"
+        ]
+    },
+    {
+        "name": "cit",
+        "attributes": []
+    },
+    {
+        "name": "mentioned",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "soCalled",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "desc",
+        "attributes": [
+            "type",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "subtype"
+        ]
+    },
+    {
+        "name": "gloss",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "decls",
+            "type",
+            "subtype",
+            "targetLang",
+            "target",
+            "evaluate",
+            "cRef"
+        ]
+    },
+    {
+        "name": "term",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "decls",
+            "targetLang",
+            "target",
+            "evaluate",
+            "type",
+            "subtype",
+            "key",
+            "ref",
+            "sortKey",
+            "cRef"
+        ]
+    },
+    {
+        "name": "ruby",
+        "attributes": []
+    },
+    {
+        "name": "rb",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "type",
+            "subtype"
+        ]
+    },
+    {
+        "name": "rt",
+        "attributes": [
+            "target",
+            "from",
+            "to",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "type",
+            "subtype",
+            "place",
+            "evidence",
+            "instant",
+            "hand",
+            "status",
+            "cause",
+            "seq"
+        ]
+    },
+    {
+        "name": "sic",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "corr",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "evidence",
+            "instant",
+            "type",
+            "subtype"
+        ]
+    },
+    {
+        "name": "choice",
+        "attributes": []
+    },
+    {
+        "name": "reg",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "evidence",
+            "instant",
+            "type",
+            "subtype"
+        ]
+    },
+    {
+        "name": "orig",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "gap",
+        "attributes": []
+    },
+    {
+        "name": "ellipsis",
+        "attributes": []
+    },
+    {
+        "name": "add",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "evidence",
+            "instant",
+            "hand",
+            "status",
+            "cause",
+            "seq",
+            "place",
+            "type",
+            "subtype",
+            "atLeast",
+            "atMost",
+            "min",
+            "max",
+            "confidence",
+            "unit",
+            "quantity",
+            "extent",
+            "precision",
+            "scope"
+        ]
+    },
+    {
+        "name": "del",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "evidence",
+            "instant",
+            "hand",
+            "status",
+            "cause",
+            "seq",
+            "type",
+            "subtype",
+            "atLeast",
+            "atMost",
+            "min",
+            "max",
+            "confidence",
+            "unit",
+            "quantity",
+            "extent",
+            "precision",
+            "scope"
+        ]
+    },
+    {
+        "name": "unclear",
+        "attributes": [
+            "reason",
+            "agent",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "evidence",
+            "instant",
+            "atLeast",
+            "atMost",
+            "min",
+            "max",
+            "confidence",
+            "unit",
+            "quantity",
+            "extent",
+            "precision",
+            "scope"
+        ]
+    },
+    {
+        "name": "name",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "rs",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "key",
+            "ref",
+            "role",
+            "nymRef",
+            "type",
+            "subtype"
+        ]
+    },
+    {
+        "name": "email",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "address",
+        "attributes": []
+    },
+    {
+        "name": "addrLine",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "street",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "postCode",
+        "attributes": []
+    },
+    {
+        "name": "postBox",
+        "attributes": []
+    },
+    {
+        "name": "num",
+        "attributes": [
+            "type",
+            "value",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "subtype",
+            "atLeast",
+            "atMost",
+            "min",
+            "max",
+            "confidence"
+        ]
+    },
+    {
+        "name": "measure",
+        "attributes": [
+            "type",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "subtype",
+            "unit",
+            "unitRef",
+            "quantity",
+            "commodity",
+            "atLeast",
+            "atMost",
+            "min",
+            "max",
+            "confidence"
+        ]
+    },
+    {
+        "name": "measureGrp",
+        "attributes": []
+    },
+    {
+        "name": "unit",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "type",
+            "subtype",
+            "unit",
+            "unitRef",
+            "quantity",
+            "commodity"
+        ]
+    },
+    {
+        "name": "date",
+        "attributes": []
+    },
+    {
+        "name": "time",
+        "attributes": []
+    },
+    {
+        "name": "abbr",
+        "attributes": [
+            "type",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "subtype"
+        ]
+    },
+    {
+        "name": "expan",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "evidence",
+            "instant"
+        ]
+    },
+    {
+        "name": "ptr",
+        "attributes": []
+    },
+    {
+        "name": "ref",
+        "attributes": [
+            "cRef",
+            "decls",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "mimeType",
+            "targetLang",
+            "target",
+            "evaluate",
+            "type",
+            "subtype"
+        ]
+    },
+    {
+        "name": "list",
+        "attributes": []
+    },
+    {
+        "name": "item",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "sortKey"
+        ]
+    },
+    {
+        "name": "label",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "type",
+            "subtype",
+            "place",
+            "hand"
+        ]
+    },
+    {
+        "name": "head",
+        "attributes": []
+    },
+    {
+        "name": "headLabel",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "headItem",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "note",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "place",
+            "targetLang",
+            "target",
+            "evaluate",
+            "type",
+            "subtype",
+            "hand",
+            "anchored",
+            "targetEnd"
+        ]
+    },
+    {
+        "name": "noteGrp",
+        "attributes": []
+    },
+    {
+        "name": "index",
+        "attributes": []
+    },
+    {
+        "name": "media",
+        "attributes": []
+    },
+    {
+        "name": "graphic",
+        "attributes": []
+    },
+    {
+        "name": "binaryObject",
+        "attributes": []
+    },
+    {
+        "name": "milestone",
+        "attributes": []
+    },
+    {
+        "name": "gb",
+        "attributes": []
+    },
+    {
+        "name": "pb",
+        "attributes": []
+    },
+    {
+        "name": "lb",
+        "attributes": []
+    },
+    {
+        "name": "cb",
+        "attributes": []
+    },
+    {
+        "name": "analytic",
+        "attributes": []
+    },
+    {
+        "name": "monogr",
+        "attributes": []
+    },
+    {
+        "name": "series",
+        "attributes": []
+    },
+    {
+        "name": "author",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "key",
+            "ref",
+            "role",
+            "nymRef",
+            "when",
+            "notBefore",
+            "notAfter",
+            "from",
+            "to",
+            "calendar",
+            "period"
+        ]
+    },
+    {
+        "name": "editor",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "key",
+            "ref",
+            "role",
+            "nymRef",
+            "when",
+            "notBefore",
+            "notAfter",
+            "from",
+            "to",
+            "calendar",
+            "period"
+        ]
+    },
+    {
+        "name": "respStmt",
+        "attributes": []
+    },
+    {
+        "name": "resp",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "key",
+            "ref",
+            "when",
+            "notBefore",
+            "notAfter",
+            "from",
+            "to",
+            "calendar",
+            "period"
+        ]
+    },
+    {
+        "name": "title",
+        "attributes": [
+            "type",
+            "level",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "subtype",
+            "key",
+            "ref",
+            "when",
+            "notBefore",
+            "notAfter",
+            "from",
+            "to",
+            "calendar",
+            "period"
+        ]
+    },
+    {
+        "name": "meeting",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "when",
+            "notBefore",
+            "notAfter",
+            "from",
+            "to",
+            "calendar",
+            "period",
+            "key",
+            "ref"
+        ]
+    },
+    {
+        "name": "imprint",
+        "attributes": []
+    },
+    {
+        "name": "publisher",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "key",
+            "ref"
+        ]
+    },
+    {
+        "name": "biblScope",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "unit",
+            "from",
+            "to"
+        ]
+    },
+    {
+        "name": "citedRange",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "targetLang",
+            "target",
+            "evaluate",
+            "unit",
+            "from",
+            "to"
+        ]
+    },
+    {
+        "name": "pubPlace",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "key",
+            "ref",
+            "role",
+            "nymRef"
+        ]
+    },
+    {
+        "name": "bibl",
+        "attributes": []
+    },
+    {
+        "name": "biblStruct",
+        "attributes": []
+    },
+    {
+        "name": "listBibl",
+        "attributes": []
+    },
+    {
+        "name": "relatedItem",
+        "attributes": []
+    },
+    {
+        "name": "l",
+        "attributes": []
+    },
+    {
+        "name": "lg",
+        "attributes": []
+    },
+    {
+        "name": "sp",
+        "attributes": []
+    },
+    {
+        "name": "speaker",
+        "attributes": [
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    },
+    {
+        "name": "stage",
+        "attributes": [
+            "type",
+            "who",
+            "toWhom",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace",
+            "place",
+            "hand"
+        ]
+    },
+    {
+        "name": "teiCorpus",
+        "attributes": []
+    },
+    {
+        "name": "divGen",
+        "attributes": []
+    },
+    {
+        "name": "textLang",
+        "attributes": [
+            "mainLang",
+            "otherLangs",
+            "rend",
+            "style",
+            "rendition",
+            "cert",
+            "resp",
+            "source",
+            "xmlid",
+            "n",
+            "xmllang",
+            "xmlbase",
+            "xmlspace"
+        ]
+    }
+]

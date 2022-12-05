@@ -10,7 +10,7 @@ import {XMLValidator} from "fast-xml-parser";
 // Registering the rich text type to make sharedb work
 // with our quill editor
 Sharedb.types.register(richText.type);
-// const ReconnectingWebSocket = require('reconnecting-websocket');
+
 // Connecting to our socket server
 const socket = new ReconnectingWebSocket('ws://127.0.0.1:8080');
 const connection = new Sharedb.Connection(socket);
