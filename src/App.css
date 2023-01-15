@@ -66,13 +66,10 @@
 }
 
 #validation-message {
-  display: inline-block;
-  margin-left: 1.5em;
+  /*display: inline-block;*/
+  padding-left: 2em;
   margin-top: 0.5em;
-  background-color: coral;
+  background-color: #e2582266;
   font-size: small;
-}
-
-.error-line {
-  background-color: coral;
+  font-family: Courier, serif;
 }
