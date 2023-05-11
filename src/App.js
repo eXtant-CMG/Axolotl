@@ -53,18 +53,18 @@ function XMLViewer() {
                 </Container>
             </Navbar>
             <Row className="h-50 g-5 pt-3">
-                <Col>
+                <Col className="col-lg-6">
                     <div className="border bg-light p-3">
                         {/*<h1>{message}</h1>*/}
                         <CodeMirrorCollab/>
                         {/*<Editor/>*/}
                     </div>
                 </Col>
-                {/*<Col>*/}
-                {/*    <div className="border bg-light h-100 p-3">*/}
-                {/*        <AnnotationContainer  />*/}
-                {/*    </div>*/}
-                {/*</Col>*/}
+                <Col className="col-lg-6">
+                    <div className="border bg-light h-100 p-3">
+                        <AnnotationContainer/>
+                    </div>
+                </Col>
             </Row>
         </Container>
     )

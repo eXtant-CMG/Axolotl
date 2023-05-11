@@ -73,3 +73,24 @@
   font-size: small;
   font-family: Courier, serif;
 }
+
+.cm-editor {
+  max-height: 550px;
+}
+
+.annotation {
+  max-height: 550px;
+  overflow-y: auto;
+  max-width: 100%;
+  overflow-x: auto;
+}
+
+.annotationnnn {
+  overflow: scroll;
+}
+
+/*.react-transform-wrapper {*/
+/*  max-height: 550px;*/
+/*  overflow: scroll !important;*/
+/*  max-width: 100%;*/
+/*}*/

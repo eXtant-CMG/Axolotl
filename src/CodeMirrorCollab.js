@@ -91,7 +91,7 @@ function updateExtension(startVersion, sock) {
                 // console.log("This is my current version: " + getSyncedVersion(this.view.state))
                 let changes = receiveUpdates(this.view.state, this.makeUpdates(updates))
                 this.view.dispatch(changes)
-                this.changeHighlight(changes.changes.desc.sections)
+                // this.changeHighlight(changes.changes.desc.sections)
                 // console.log("This is my next version: " + getSyncedVersion(this.view.state))
                 // console.log(receiveUpdates(this.view.state, this.makeUpdates(updates)))
             });
@@ -100,7 +100,7 @@ function updateExtension(startVersion, sock) {
 
         update(update) {
             if(update.docChanged) {
-
+                // Only emit if the changes are actually yours and not from the server
                 if(sendableUpdates(this.view.state).length) {
                     // console.log("I'm updating!");
                     // console.log(sendableUpdates(this.view.state));
@@ -117,6 +117,7 @@ function updateExtension(startVersion, sock) {
             }))
         }
 
+        //Currently not used and not working
         changeHighlight(sections) {
             console.log("adding highlight")
             let index = 0;

@@ -336,7 +336,8 @@
     },
     {
         "name": "choice",
-        "attributes": []
+        "attributes": [],
+        "children": ["abbr", "choice", "corr", "expan", "orig", "reg", "sic", "unclear"]
     },
     {
         "name": "reg",
