@@ -17,6 +17,7 @@
     "codemirror": "^6.0.1",
     "codemirror-ot": "^3.5.0",
     "fast-xml-parser": "^4.0.11",
+    "file-saver": "^2.0.5",
     "highlight.js": "^11.6.0",
     "openseadragon": "^4.0.0",
     "ot-json1": "^1.0.2",

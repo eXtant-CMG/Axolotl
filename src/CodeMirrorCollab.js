@@ -1,13 +1,16 @@
 import React, {useEffect, useRef, useState} from "react";
 import {basicSetup, EditorView} from "codemirror"
-import {ViewPlugin} from "@codemirror/view"
+import {ViewPlugin, drawSelection} from "@codemirror/view"
 import {xml} from "@codemirror/lang-xml"
-import {ChangeSet, EditorState, StateField} from "@codemirror/state"
+import {ChangeSet, EditorState, StateField, Compartment, EditorSelection} from "@codemirror/state"
 import {receiveUpdates, sendableUpdates, collab, getSyncedVersion} from "@codemirror/collab"
 import {io} from 'socket.io-client'
 import schema from './util/jsonSchema.json'
 import {XMLValidator} from "fast-xml-parser";
 import {Decoration} from "@codemirror/view"
+import {SearchCursor} from "@codemirror/search"
+import { saveAs } from 'file-saver';
+
 
 const baseTheme = EditorView.baseTheme({
     ".error-line": {backgroundColor: "#e2582266"},
@@ -77,6 +80,24 @@ function errorCheckAndValidationExtension(setValidation) {
     })
     return [plugin]
 }
+
+// currently not used
+let xmlTree = StateField.define({
+    create() {
+        let parser = new DOMParser();
+        let xmlDoc = parser.parseFromString("","text/xml");
+        return xmlDoc;
+    },
+    update(value, tr) {
+        if (tr.docChanged) {
+            let parser = new DOMParser();
+            let xmlDoc = parser.parseFromString(tr.newDoc.toString(),"text/xml");
+            console.log(xmlDoc)
+        }
+        else return value
+    }
+})
+
 
 // Extension for updating the editor using built-in operational transformation
 // functions in CodeMirror and syncing everything with the server
@@ -148,36 +169,57 @@ function updateExtension(startVersion, sock) {
     return [collab({startVersion: pluginVersion}), plugin]
 }
 
-export default function CodeMirrorCollab() {
+export default function CodeMirrorCollab({selection}) {
     const [validation, setValidation] = useState({"err": {"msg": ""}})
     const editor = useRef();
+    const viewRef = useRef();
+
+    function exportXML() {
+        let blob = new Blob([viewRef.current?.state.doc.toString()], {type: "application/xml"})
+        saveAs(blob, 'file.xml')
+    }
+
     useEffect(() => {
-        let view = new EditorView({
-            parent: editor.current
-        })
 
         socket.on("firstVersion", (text, version) => {
             let state = EditorState.create({
                 doc: text,
-                extensions: [basicSetup, baseTheme, xml({elements: schema}), updateExtension(version, socket), errorCheckAndValidationExtension(setValidation)]
+                extensions: [basicSetup, baseTheme, xml({elements: schema}), updateExtension(version, socket),
+                                errorCheckAndValidationExtension(setValidation),
+                                EditorState.allowMultipleSelections.of(true), drawSelection()]
             });
             setValidation(checkXML(state.doc.toString()))
-            view.destroy();
-            view = new EditorView({
+            viewRef.current = new EditorView({
                 state,
                 parent: editor.current
             })
         })
 
-        return () => {
-            view.destroy();
-        };
     }, []);
+
+    useEffect(() => {
+        if (viewRef.current) {
+            let cursor = new SearchCursor(viewRef.current?.state.doc, '#' + selection);
+            cursor.next()
+            let line = viewRef.current?.state.doc.lineAt(cursor.value.to)
+
+            viewRef.current?.dispatch({
+                selection: EditorSelection.create([
+                    EditorSelection.range(line.from, line.to),
+                    EditorSelection.cursor(line.from)
+                ], 1),
+                // scrollIntoView: true
+            })
+        }
+    }, [selection])
+
 
     return (
         <div>
             <div ref={editor}></div>
             <div id="validation-message">{validation.err.msg}</div>
+            <button href="#export" onClick={exportXML}>Export XML</button>
+
         </div>
     );
 }

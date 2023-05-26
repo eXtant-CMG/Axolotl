@@ -1,5 +1,4 @@
 import logo from './logo.svg';
-import pic from './img.jpg'
 import './App.css';
 import {Component, useEffect, useState} from "react";
 import Container from 'react-bootstrap/Container';
@@ -21,6 +20,8 @@ function App() {
 
 function XMLViewer() {
     const [message, setMessage] = useState("")
+    const [selectedZone, setSelectedZone] = useState("")
+
     useEffect(() => {
         fetch('http://localhost:8000/message')
             .then(res => res.json())
@@ -56,18 +57,19 @@ function XMLViewer() {
                 <Col className="col-lg-6">
                     <div className="border bg-light p-3">
                         {/*<h1>{message}</h1>*/}
-                        <CodeMirrorCollab/>
+                        <CodeMirrorCollab selection={selectedZone}/>
                         {/*<Editor/>*/}
                     </div>
                 </Col>
                 <Col className="col-lg-6">
                     <div className="border bg-light h-100 p-3">
-                        <AnnotationContainer/>
+                        <AnnotationContainer onSelection={setSelectedZone}/>
                     </div>
                 </Col>
             </Row>
         </Container>
     )
 }
+
 
 export default App;

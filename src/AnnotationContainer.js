@@ -11,7 +11,7 @@ import { Annotorious } from '@recogito/annotorious';
 
 import '@recogito/annotorious/dist/annotorious.min.css';
 
-function AnnotationContainer() {
+function AnnotationContainer({onSelection}) {
 
     // Ref to the image DOM element
     const imgEl = useRef();
@@ -48,6 +48,10 @@ function AnnotationContainer() {
                 console.log('deleted', annotation);
             });
 
+            annotorious.on('selectAnnotation', function(annotation, element) {
+                onSelection(element.getAttribute('data-id'));
+            });
+
             annotorious.loadAnnotations(createAnnotationUrl());
         }
 
@@ -55,7 +59,9 @@ function AnnotationContainer() {
         setAnno(annotorious);
 
         // Cleanup: destroy current instance
-        return () => annotorious.destroy();
+        return () => {
+            annotorious.destroy();
+        };
     }, []);
 
     // Toggles current tool + button label
@@ -73,12 +79,16 @@ function AnnotationContainer() {
     return (
         <div>
             <TransformWrapper
-                initialScale={0.2}
+                initialScale={1}
                 minScale={0.05}
                 wheel={{disabled: true}}
                 panning={{disabled: true}}
-                centerOnInit={true}
-                centerZoomedOut={true}
+                minPositionX={0}
+                minPositionY={300}
+                // centerOnInit={true}
+                // centerZoomedOut={true}
+                // limitToBounds={false}
+                // disablePadding={true}
             >
                 {({ zoomIn, zoomOut, resetTransform, centerView}) => (
                     <React.Fragment>
@@ -88,7 +98,7 @@ function AnnotationContainer() {
                             <button onClick={() => resetTransform()}>x</button>
                             <button onClick={() => centerView()}>o</button>
                         </div>
-                        {/*<div className="annotation">*/}
+                        <div className="annotation">
                         <TransformComponent wrapperStyle={{ maxWidth: "100%", maxHeight: "550px", overflow: "scroll"}}>
 
                             <img className="annotationnnn"
@@ -96,7 +106,7 @@ function AnnotationContainer() {
                             src={pic}/>
 
                         </TransformComponent>
-                        {/*</div>*/}
+                        </div>
                     </React.Fragment>
                 )}
             </TransformWrapper>
