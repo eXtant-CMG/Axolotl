@@ -279,8 +279,7 @@ export function getAnnotationsFromXml(path) {
     if (errorNode) {
         console.log("error while parsing");
     } else {
-        let annotations = convertZonesToJson(zones);
-        return annotations;
+        return convertZonesToJson(zones);
     }
 }
 

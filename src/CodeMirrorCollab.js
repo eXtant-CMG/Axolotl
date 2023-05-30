@@ -1,7 +1,8 @@
 import React, {useEffect, useRef, useState} from "react";
 import {basicSetup, EditorView} from "codemirror"
 import {ViewPlugin, drawSelection} from "@codemirror/view"
-import {xml} from "@codemirror/lang-xml"
+import {xml, xmlLanguage} from "@codemirror/lang-xml"
+import {syntaxTree} from "@codemirror/language"
 import {ChangeSet, EditorState, StateField, Compartment, EditorSelection} from "@codemirror/state"
 import {receiveUpdates, sendableUpdates, collab, getSyncedVersion} from "@codemirror/collab"
 import {io} from 'socket.io-client'
@@ -173,10 +174,16 @@ export default function CodeMirrorCollab({selection}) {
     const [validation, setValidation] = useState({"err": {"msg": ""}})
     const editor = useRef();
     const viewRef = useRef();
+    const [visibility, setVisibility] = useState(true);
 
     function exportXML() {
         let blob = new Blob([viewRef.current?.state.doc.toString()], {type: "application/xml"})
         saveAs(blob, 'file.xml')
+    }
+
+    function switchViews() {
+        document.getElementsByClassName("cm-editor")[0].style.visibility = visibility ? "hidden" : "visible";
+        setVisibility(!visibility)
     }
 
     useEffect(() => {
@@ -199,17 +206,22 @@ export default function CodeMirrorCollab({selection}) {
 
     useEffect(() => {
         if (viewRef.current) {
-            let cursor = new SearchCursor(viewRef.current?.state.doc, '#' + selection);
+            let cursor = new SearchCursor(viewRef.current?.state.doc, '\'#' + selection + '\'');
             cursor.next()
-            let line = viewRef.current?.state.doc.lineAt(cursor.value.to)
+
+            const node = syntaxTree(viewRef.current?.state).cursorAt(cursor.value.from).node
 
             viewRef.current?.dispatch({
                 selection: EditorSelection.create([
-                    EditorSelection.range(line.from, line.to),
-                    EditorSelection.cursor(line.from)
+                    EditorSelection.range(node.from, node.to),
+                    EditorSelection.cursor(node.from)
                 ], 1),
                 // scrollIntoView: true
             })
+
+            //TODO this is me trying to refocus after selection
+            // viewRef.current?.focus();
+            // editor.current?.firstChild.classList.add("cm-focused")
         }
     }, [selection])
 
@@ -218,7 +230,8 @@ export default function CodeMirrorCollab({selection}) {
         <div>
             <div ref={editor}></div>
             <div id="validation-message">{validation.err.msg}</div>
-            <button href="#export" onClick={exportXML}>Export XML</button>
+            <button onClick={exportXML}>Export XML</button>
+            <button onClick={() => switchViews()}>Switch Views</button>
 
         </div>
     );

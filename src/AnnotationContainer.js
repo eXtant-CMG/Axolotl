@@ -101,7 +101,7 @@ function AnnotationContainer({onSelection}) {
                         <div className="annotation">
                         <TransformComponent wrapperStyle={{ maxWidth: "100%", maxHeight: "550px", overflow: "scroll"}}>
 
-                            <img className="annotationnnn"
+                            <img className=""
                             ref={imgEl}
                             src={pic}/>
 
