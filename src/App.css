@@ -95,3 +95,15 @@
   /*max-width: 100%;*/
   transform-origin: top left;
 }
+
+.placeholder {
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 0 3px;
+  margin-right: 5px;
+  font-family: Helvetica, serif;
+  background-color: #6bb89b;
+  cursor: auto;
+  opacity: 1;
+
+}

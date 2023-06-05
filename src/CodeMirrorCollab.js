@@ -1,53 +1,40 @@
 import React, {useEffect, useRef, useState} from "react";
 import {basicSetup, EditorView} from "codemirror"
-import {ViewPlugin, drawSelection} from "@codemirror/view"
-import {xml, xmlLanguage} from "@codemirror/lang-xml"
+import {ViewPlugin, drawSelection, MatchDecorator, Decoration} from "@codemirror/view"
+import {xml} from "@codemirror/lang-xml"
 import {syntaxTree} from "@codemirror/language"
-import {ChangeSet, EditorState, StateField, Compartment, EditorSelection} from "@codemirror/state"
+import {SearchCursor} from "@codemirror/search"
+import {ChangeSet, EditorState, Compartment, EditorSelection} from "@codemirror/state"
 import {receiveUpdates, sendableUpdates, collab, getSyncedVersion} from "@codemirror/collab"
 import {io} from 'socket.io-client'
-import schema from './util/jsonSchema.json'
 import {XMLValidator} from "fast-xml-parser";
-import {Decoration} from "@codemirror/view"
-import {SearchCursor} from "@codemirror/search"
-import { saveAs } from 'file-saver';
-
-
-const baseTheme = EditorView.baseTheme({
-    ".error-line": {backgroundColor: "#e2582266"},
-    ".changed-code": {backgroundColor: "#ac97e7cc"}
-})
-const errorLineDeco = Decoration.line({ class: "error-line" });
-
-const changedCodeMark = Decoration.mark({class: "changed-code"})
-
-const changedCodeField = StateField.define({
-        create() {
-            return Decoration.none;
-        },
-        update(section) {
-            return section
-        },
-        provide: field => EditorView.decorations.from(field)
-    }
-)
+import {saveAs} from 'file-saver';
+import schema from './util/jsonSchema.json'
+import {baseTheme, errorLineDeco, placeholderMatcher, checkXML} from './util/codemirror-util'
 
 const socket = io("http://127.0.0.1:5000");
-// socket.on("connect", () => {
-//     console.log(socket.id);
-// });
 
-function checkXML(data) {
-    const result = XMLValidator.validate(data, {
-        allowBooleanAttributes: true
-    });
-    if (result === true) {
-        return({"err": {"msg": ""}})
-    }
-    else {
-        return(result)
-    }
+const XMLView = new Compartment()
+
+function createBlockViewExtension() {
+    let plugin = ViewPlugin.fromClass(class {
+        constructor(view) {
+            this.view = view;
+            this.placeholders = placeholderMatcher.createDeco(view)
+        }
+
+        update(update){
+            if(update.docChanged || update.viewportChanged) {
+                this.placeholders = placeholderMatcher.updateDeco(update, this.placeholders)
+            }
+        }
+
+    },{
+        decorations: instance => instance.placeholders
+    })
+    return [plugin]
 }
+
 
 function errorCheckAndValidationExtension(setValidation) {
     let plugin = ViewPlugin.fromClass(class {
@@ -82,23 +69,6 @@ function errorCheckAndValidationExtension(setValidation) {
     return [plugin]
 }
 
-// currently not used
-let xmlTree = StateField.define({
-    create() {
-        let parser = new DOMParser();
-        let xmlDoc = parser.parseFromString("","text/xml");
-        return xmlDoc;
-    },
-    update(value, tr) {
-        if (tr.docChanged) {
-            let parser = new DOMParser();
-            let xmlDoc = parser.parseFromString(tr.newDoc.toString(),"text/xml");
-            console.log(xmlDoc)
-        }
-        else return value
-    }
-})
-
 
 // Extension for updating the editor using built-in operational transformation
 // functions in CodeMirror and syncing everything with the server
@@ -113,7 +83,6 @@ function updateExtension(startVersion, sock) {
                 // console.log("This is my current version: " + getSyncedVersion(this.view.state))
                 let changes = receiveUpdates(this.view.state, this.makeUpdates(updates))
                 this.view.dispatch(changes)
-                // this.changeHighlight(changes.changes.desc.sections)
                 // console.log("This is my next version: " + getSyncedVersion(this.view.state))
                 // console.log(receiveUpdates(this.view.state, this.makeUpdates(updates)))
             });
@@ -139,33 +108,6 @@ function updateExtension(startVersion, sock) {
             }))
         }
 
-        //Currently not used and not working
-        changeHighlight(sections) {
-            console.log("adding highlight")
-            let index = 0;
-            for (let i = 0; i < sections.length; i += 2) {
-                console.log(sections[i], sections[i+1]);
-                // This section has not changed
-                if (sections[i+1] === -1) {
-                    index = sections[i];
-                }
-                // This section has been deleted
-                else if (sections[i+1] === 0) {
-                    console.log("I will mark " + index + " as deleted")
-                }
-                // This section has had an insertion or a replacement
-                else {
-                    console.log("I will mark " + index + " as changed")
-                    let effect = changedCodeMark.range(index, index+sections[i+1])
-                    console.log(effect)
-                    this.view.dispatch({effect})
-                }
-            }
-            // sections.forEach(function (section) {
-            //     console.log(section);
-            // });
-        }
-
     })
     return [collab({startVersion: pluginVersion}), plugin]
 }
@@ -174,7 +116,7 @@ export default function CodeMirrorCollab({selection}) {
     const [validation, setValidation] = useState({"err": {"msg": ""}})
     const editor = useRef();
     const viewRef = useRef();
-    const [visibility, setVisibility] = useState(true);
+    const [blockView, setBlockView] = useState(false);
 
     function exportXML() {
         let blob = new Blob([viewRef.current?.state.doc.toString()], {type: "application/xml"})
@@ -182,8 +124,11 @@ export default function CodeMirrorCollab({selection}) {
     }
 
     function switchViews() {
-        document.getElementsByClassName("cm-editor")[0].style.visibility = visibility ? "hidden" : "visible";
-        setVisibility(!visibility)
+        viewRef.current?.dispatch({
+            effects: XMLView.reconfigure(blockView ? [] : createBlockViewExtension())
+        })
+
+        setBlockView(!blockView)
     }
 
     useEffect(() => {
@@ -192,15 +137,24 @@ export default function CodeMirrorCollab({selection}) {
             let state = EditorState.create({
                 doc: text,
                 extensions: [basicSetup, baseTheme, xml({elements: schema}), updateExtension(version, socket),
-                                errorCheckAndValidationExtension(setValidation),
+                                errorCheckAndValidationExtension(setValidation), XMLView.of([]),
                                 EditorState.allowMultipleSelections.of(true), drawSelection()]
             });
+
             setValidation(checkXML(state.doc.toString()))
             viewRef.current = new EditorView({
                 state,
                 parent: editor.current
             })
         })
+
+        socket.on("disconnect", () => {
+            viewRef.current?.destroy();
+        })
+
+        return () => {
+            viewRef.current?.destroy();
+        }
 
     }, []);
 
@@ -224,6 +178,7 @@ export default function CodeMirrorCollab({selection}) {
             // editor.current?.firstChild.classList.add("cm-focused")
         }
     }, [selection])
+
 
 
     return (
