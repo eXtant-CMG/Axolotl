@@ -1,6 +1,6 @@
 import {Decoration, MatchDecorator, WidgetType} from "@codemirror/view";
 import {syntaxTree} from "@codemirror/language";
-import {Compartment, StateField} from "@codemirror/state";
+import {StateField} from "@codemirror/state";
 import {EditorView} from "codemirror";
 import {XMLValidator} from "fast-xml-parser";
 

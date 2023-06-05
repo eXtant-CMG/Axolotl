@@ -1,13 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import {basicSetup, EditorView} from "codemirror"
-import {ViewPlugin, drawSelection, MatchDecorator, Decoration} from "@codemirror/view"
+import {ViewPlugin, drawSelection, Decoration} from "@codemirror/view"
 import {xml} from "@codemirror/lang-xml"
 import {syntaxTree} from "@codemirror/language"
 import {SearchCursor} from "@codemirror/search"
 import {ChangeSet, EditorState, Compartment, EditorSelection} from "@codemirror/state"
 import {receiveUpdates, sendableUpdates, collab, getSyncedVersion} from "@codemirror/collab"
 import {io} from 'socket.io-client'
-import {XMLValidator} from "fast-xml-parser";
 import {saveAs} from 'file-saver';
 import schema from './util/jsonSchema.json'
 import {baseTheme, errorLineDeco, placeholderMatcher, checkXML} from './util/codemirror-util'

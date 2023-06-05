@@ -1,15 +1,12 @@
-import logo from './logo.svg';
 import './App.css';
-import {Component, useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import NavDropdown from 'react-bootstrap/NavDropdown';
-import Image from 'react-bootstrap/Image'
 import AnnotationContainer from "./AnnotationContainer";
-import Editor from "./Editor";
 import CodeMirrorCollab from "./CodeMirrorCollab";
 
 function App() {
