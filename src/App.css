@@ -43,27 +43,6 @@
 
 }
 
-/*Quill numbering*/
-
-.ql-editor {
-  counter-reset: line;
-  padding-left: 0;
-  overflow: auto;
-  max-height: 70vh;
-  min-height: 70vh;
-}
-
-.ql-editor p:before {
-  counter-increment: line;
-  content: counter(line);
-  display: inline-block;
-  border-right: 1px solid #ddd;
-  padding: 0 .5em;
-  margin-right: .5em;
-  color: #888;
-  width: 40px;
-  text-align: right;
-}
 
 #validation-message {
   /*display: inline-block;*/
@@ -74,19 +53,11 @@
   font-family: Courier, serif;
 }
 
-.cm-editor {
-  max-height: 550px;
-}
-
 .annotation {
-  max-height: 550px;
+  /*max-height: 550px;*/
   overflow-y: auto;
   max-width: 100%;
   overflow-x: auto;
-}
-
-.annotationnnn {
-  overflow: scroll;
 }
 
 .react-transform-wrapper {
@@ -103,7 +74,11 @@
   margin-right: 5px;
   font-family: Helvetica, serif;
   background-color: #6bb89b;
-  cursor: auto;
   opacity: 1;
-
+  cursor: auto;
+  /*cursor: grab;*/
 }
+
+/*.placeholder:active {*/
+/*  cursor: grabbing;*/
+/*}*/

@@ -10,6 +10,10 @@ import {io} from 'socket.io-client'
 import {saveAs} from 'file-saver';
 import schema from './util/jsonSchema.json'
 import {baseTheme, errorLineDeco, placeholderMatcher, checkXML} from './util/codemirror-util'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import Button from 'react-bootstrap/Button'
+import {Col, Row} from "react-bootstrap";
 
 const socket = io("http://127.0.0.1:5000");
 
@@ -169,7 +173,7 @@ export default function CodeMirrorCollab({selection}) {
                     EditorSelection.range(node.from, node.to),
                     EditorSelection.cursor(node.from)
                 ], 1),
-                // scrollIntoView: true
+                scrollIntoView: true
             })
 
             //TODO this is me trying to refocus after selection
@@ -181,12 +185,18 @@ export default function CodeMirrorCollab({selection}) {
 
 
     return (
-        <div>
-            <div ref={editor}></div>
-            <div id="validation-message">{validation.err.msg}</div>
-            <button onClick={exportXML}>Export XML</button>
-            <button onClick={() => switchViews()}>Switch Views</button>
-
+        <div className={"h-100 d-flex flex-column"}>
+            <div>
+                <Button variant="light" title={'export XML'} onClick={exportXML}><FontAwesomeIcon icon={solid("file-export")} /></Button>
+                <Button variant="light" title={'switch views'} onClick={() => switchViews()}><FontAwesomeIcon icon={solid("wand-magic-sparkles")} /></Button>
+                <Button variant="light" title={'drag and move'} className={'drag-handle'}><FontAwesomeIcon icon={solid("up-down-left-right")} /></Button>
+            </div>
+            <Row className={"flex-grow-1 overflow-auto"}>
+                <div ref={editor}></div>
+            </Row>
+            <Row>
+                <div id="validation-message">{validation.err.msg}</div>
+            </Row>
         </div>
     );
 }

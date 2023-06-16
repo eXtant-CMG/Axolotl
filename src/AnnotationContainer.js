@@ -8,7 +8,9 @@ import {
 
 import { useEffect, useRef, useState } from 'react';
 import { Annotorious } from '@recogito/annotorious';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
+import Button from 'react-bootstrap/Button'
 import '@recogito/annotorious/dist/annotorious.min.css';
 
 function AnnotationContainer({onSelection}) {
@@ -77,7 +79,7 @@ function AnnotationContainer({onSelection}) {
 
 
     return (
-        <div>
+        <div className={"h-100 d-flex flex-column"}>
             <TransformWrapper
                 initialScale={1}
                 minScale={0.05}
@@ -93,13 +95,14 @@ function AnnotationContainer({onSelection}) {
                 {({ zoomIn, zoomOut, resetTransform, centerView}) => (
                     <React.Fragment>
                         <div className="tools">
-                            <button onClick={() => zoomIn(0.1)}>+</button>
-                            <button onClick={() => zoomOut(0.1)}>-</button>
-                            <button onClick={() => resetTransform()}>x</button>
-                            <button onClick={() => centerView()}>o</button>
+                            <Button variant="light" title={'zoom in'} onClick={() => zoomIn(0.1)}><FontAwesomeIcon icon={solid("magnifying-glass-plus")} /></Button>
+                            <Button variant="light" title={'zoom out'} onClick={() => zoomOut(0.1)}><FontAwesomeIcon icon={solid("magnifying-glass-minus")} /></Button>
+                            <Button variant="light" title={'reset zoom'} onClick={() => resetTransform()}><FontAwesomeIcon icon={solid("magnifying-glass")} /></Button>
+                            <Button variant="light" title={'center view'} onClick={() => centerView()}><FontAwesomeIcon icon={solid("magnifying-glass-location")} /></Button>
+                            <Button variant="light" title={'drag and move'} className={'drag-handle'}><FontAwesomeIcon icon={solid("up-down-left-right")} /></Button>
                         </div>
                         <div className="annotation">
-                        <TransformComponent wrapperStyle={{ maxWidth: "100%", maxHeight: "550px", overflow: "scroll"}}>
+                        <TransformComponent wrapperStyle={{ maxWidth: "100%", height:"100%", overflow: "scroll"}}>
 
                             <img className=""
                             ref={imgEl}
