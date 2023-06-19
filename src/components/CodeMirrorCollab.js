@@ -13,9 +13,17 @@ import {baseTheme, errorLineDeco, placeholderMatcher, checkXML} from '../util/co
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Button from 'react-bootstrap/Button'
-import {Col, Row} from "react-bootstrap";
+import {Row} from "react-bootstrap";
+import Cookies from "universal-cookie";
 
-const socket = io("http://127.0.0.1:5000");
+const cookies = new Cookies();
+// initialize socket but don't connect because we might not have auth yet
+const socket = io.connect("http://127.0.0.1:5000", {
+    autoConnect: false,
+    query: {
+        token: cookies.get("TOKEN")
+    }
+});
 
 const XMLView = new Compartment()
 
@@ -37,7 +45,6 @@ function createBlockViewExtension() {
     })
     return [plugin]
 }
-
 
 function errorCheckAndValidationExtension(setValidation) {
     let plugin = ViewPlugin.fromClass(class {
@@ -72,7 +79,6 @@ function errorCheckAndValidationExtension(setValidation) {
     return [plugin]
 }
 
-
 // Extension for updating the editor using built-in operational transformation
 // functions in CodeMirror and syncing everything with the server
 function updateExtension(startVersion, sock) {
@@ -89,7 +95,6 @@ function updateExtension(startVersion, sock) {
                 // console.log("This is my next version: " + getSyncedVersion(this.view.state))
                 // console.log(receiveUpdates(this.view.state, this.makeUpdates(updates)))
             });
-
         }
 
         update(update) {
@@ -100,7 +105,6 @@ function updateExtension(startVersion, sock) {
                     // console.log(sendableUpdates(this.view.state));
                     sock.emit("pushUpdates", getSyncedVersion(this.view.state), sendableUpdates(this.view.state));
                 }
-
             }
         }
 
@@ -110,16 +114,17 @@ function updateExtension(startVersion, sock) {
                 clientID: u.clientID
             }))
         }
-
     })
     return [collab({startVersion: pluginVersion}), plugin]
 }
 
-export default function CodeMirrorCollab({selection}) {
+export default function CodeMirrorCollab({selection, disconnect}) {
     const [validation, setValidation] = useState({"err": {"msg": ""}})
     const editor = useRef();
     const viewRef = useRef();
     const [blockView, setBlockView] = useState(false);
+
+    if (!socket.connected) socket.connect()
 
     function exportXML() {
         let blob = new Blob([viewRef.current?.state.doc.toString()], {type: "application/xml"})
@@ -182,6 +187,12 @@ export default function CodeMirrorCollab({selection}) {
         }
     }, [selection])
 
+    // If parents wants us to disconnect socket, we do
+    useEffect(() => {
+        if(disconnect) {
+            socket.disconnect();
+        }
+    }, [disconnect])
 
 
     return (
