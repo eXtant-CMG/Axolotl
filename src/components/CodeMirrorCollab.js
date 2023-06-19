@@ -8,8 +8,8 @@ import {ChangeSet, EditorState, Compartment, EditorSelection} from "@codemirror/
 import {receiveUpdates, sendableUpdates, collab, getSyncedVersion} from "@codemirror/collab"
 import {io} from 'socket.io-client'
 import {saveAs} from 'file-saver';
-import schema from './util/jsonSchema.json'
-import {baseTheme, errorLineDeco, placeholderMatcher, checkXML} from './util/codemirror-util'
+import schema from '../util/jsonSchema.json'
+import {baseTheme, errorLineDeco, placeholderMatcher, checkXML} from '../util/codemirror-util'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Button from 'react-bootstrap/Button'

@@ -1,6 +1,6 @@
 import React from "react";
-import pic from './oxen.jpg';
-import { getAnnotationsFromXml } from './util/annotation-util'
+import pic from '../assets/oxen.jpg';
+import { getAnnotationsFromXml } from '../util/annotation-util'
 import {
     TransformWrapper,
     TransformComponent,
