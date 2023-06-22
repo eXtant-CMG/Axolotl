@@ -85,7 +85,7 @@ function AnnotationContainer({onSelection}) {
     useEffect(() => {
         const configuration = {
             method: "get",
-            url: "http://localhost:8000/image",
+            url: "https://axolotl-server-db50b102d293.herokuapp.com/image",
             headers: {
                 "Authorization": `Bearer ${cookies.get("TOKEN")}`
             },

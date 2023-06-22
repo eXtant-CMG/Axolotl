@@ -14,7 +14,7 @@ export function Login() {
     const handleSubmit = (e) => {
         const configuration = {
             method: "post",
-            url: "http://localhost:8000/login",
+            url: "https://axolotl-server-db50b102d293.herokuapp.com/login",
             data: {
                 username: username,
                 password,
