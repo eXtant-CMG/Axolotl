@@ -5,6 +5,7 @@
   "proxy": "http://127.0.0.1:8000",
   "dependencies": {
     "@codemirror/collab": "github:codemirror/collab",
+    "@codemirror/commands": "^6.2.4",
     "@codemirror/lang-xml": "^6.0.1",
     "@codemirror/language": "^6.7.0",
     "@codemirror/search": "^6.5.0",

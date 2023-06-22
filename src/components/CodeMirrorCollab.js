@@ -1,10 +1,11 @@
 import React, {useEffect, useRef, useState} from "react";
 import {basicSetup, EditorView} from "codemirror"
-import {ViewPlugin, drawSelection, Decoration} from "@codemirror/view"
+import {ViewPlugin, drawSelection, Decoration, tooltips, keymap} from "@codemirror/view"
 import {xml} from "@codemirror/lang-xml"
 import {syntaxTree} from "@codemirror/language"
 import {SearchCursor} from "@codemirror/search"
 import {ChangeSet, EditorState, Compartment, EditorSelection} from "@codemirror/state"
+import {indentWithTab} from "@codemirror/commands"
 import {receiveUpdates, sendableUpdates, collab, getSyncedVersion} from "@codemirror/collab"
 import {io} from 'socket.io-client'
 import {saveAs} from 'file-saver';
@@ -82,6 +83,8 @@ function errorCheckAndValidationExtension(setValidation) {
 // Extension for updating the editor using built-in operational transformation
 // functions in CodeMirror and syncing everything with the server
 function updateExtension(startVersion, sock) {
+    let pushing = false;
+    // let unpushed = false;
     let pluginVersion = startVersion;
     let plugin = ViewPlugin.fromClass(class {
         constructor(view) {
@@ -92,21 +95,44 @@ function updateExtension(startVersion, sock) {
                 // console.log("This is my current version: " + getSyncedVersion(this.view.state))
                 let changes = receiveUpdates(this.view.state, this.makeUpdates(updates))
                 this.view.dispatch(changes)
+                setTimeout(() => {
+                    pushing = false;
+                    // if (unpushed) {
+                    //     unpushed = false;
+                    // }
+                }, 1000)
+
                 // console.log("This is my next version: " + getSyncedVersion(this.view.state))
                 // console.log(receiveUpdates(this.view.state, this.makeUpdates(updates)))
             });
         }
 
         update(update) {
+
             if(update.docChanged) {
-                // Only emit if the changes are actually yours and not from the server
-                if(sendableUpdates(this.view.state).length) {
-                    // console.log("I'm updating!");
-                    // console.log(sendableUpdates(this.view.state));
-                    sock.emit("pushUpdates", getSyncedVersion(this.view.state), sendableUpdates(this.view.state));
-                }
+                // console.log('waiting to push')
+                setTimeout(()=>{
+                        // Only emit if the changes are actually yours and not from the server
+                        if(!pushing && sendableUpdates(this.view.state).length) {
+                            pushing = true;
+                            // console.log("I'm updating!");
+                            // console.log(sendableUpdates(this.view.state));
+                            sock.emit("pushUpdates", getSyncedVersion(this.view.state), sendableUpdates(this.view.state))
+                        }
+                        // else if (pushing && sendableUpdates(this.view.state).length) {
+                        //     unpushed = true;
+                        // }
+                }, 1000);
             }
         }
+
+        // push() {
+        //     if(!pushing && sendableUpdates(this.view.state).length) {
+        //         console.log("retrying to push", getSyncedVersion(this.view.state))
+        //         pushing = true;
+        //         sock.emit("pushUpdates", getSyncedVersion(this.view.state), sendableUpdates(this.view.state))
+        //     }
+        // }
 
         makeUpdates(updates) {
             return updates.map(u => ({
@@ -146,7 +172,8 @@ export default function CodeMirrorCollab({selection, disconnect}) {
                 doc: text,
                 extensions: [basicSetup, baseTheme, xml({elements: schema}), updateExtension(version, socket),
                                 errorCheckAndValidationExtension(setValidation), XMLView.of([]),
-                                EditorState.allowMultipleSelections.of(true), drawSelection()]
+                                EditorState.allowMultipleSelections.of(true), drawSelection(),
+                                tooltips({parent: document.body}), keymap.of([indentWithTab])]
             });
 
             setValidation(checkXML(state.doc.toString()))
@@ -156,7 +183,8 @@ export default function CodeMirrorCollab({selection, disconnect}) {
             })
         })
 
-        socket.on("disconnect", () => {
+        socket.on("disconnect", function(reason) {
+            console.log(reason)
             viewRef.current?.destroy();
         })
 

@@ -12,6 +12,9 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Button from 'react-bootstrap/Button'
 import '@recogito/annotorious/dist/annotorious.min.css';
+import axios from "axios";
+import Cookies from "universal-cookie";
+const cookies = new Cookies();
 
 function AnnotationContainer({onSelection}) {
 
@@ -23,6 +26,8 @@ function AnnotationContainer({onSelection}) {
 
     // Current drawing tool name
     const [ tool, setTool ] = useState('rect');
+
+    const [imgURL, setImgURL] = useState('');
 
     // Init Annotorious when the component
     // mounts, and keep the current 'anno'
@@ -77,6 +82,28 @@ function AnnotationContainer({onSelection}) {
         }
     }
 
+    useEffect(() => {
+        const configuration = {
+            method: "get",
+            url: "http://localhost:8000/image",
+            headers: {
+                "Authorization": `Bearer ${cookies.get("TOKEN")}`
+            },
+            responseType: 'blob'
+        };
+        axios(configuration)
+            .then((response) => {
+                setImgURL(URL.createObjectURL(response.data));
+            })
+    }, [])
+
+    function createAnnotationUrl() {
+        const annotationJson = getAnnotationsFromXml('path')
+        const blob = new Blob([JSON.stringify(annotationJson)], {type: "application/json"})
+        // const blob = new Blob([JSON.stringify('')], {type: "application/json"})
+        return(URL.createObjectURL(blob));
+    }
+
 
     return (
         <div className={"h-100 d-flex flex-column"}>
@@ -106,7 +133,7 @@ function AnnotationContainer({onSelection}) {
 
                             <img className=""
                             ref={imgEl}
-                            src={pic}/>
+                            src={imgURL}/>
 
                         </TransformComponent>
                         </div>
@@ -117,11 +144,6 @@ function AnnotationContainer({onSelection}) {
     );
 }
 
-function createAnnotationUrl() {
-    const annotationJson = getAnnotationsFromXml('path')
-    const blob = new Blob([JSON.stringify(annotationJson)], {type: "application/json"})
-    return(URL.createObjectURL(blob));
-}
 
 export default AnnotationContainer;
 

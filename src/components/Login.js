@@ -4,12 +4,10 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import NavDropdown from "react-bootstrap/NavDropdown";
 const cookies = new Cookies();
 
 export function Login() {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
     const [login, setLogin] = useState(false);
 
@@ -18,7 +16,7 @@ export function Login() {
             method: "post",
             url: "http://localhost:8000/login",
             data: {
-                email,
+                username: username,
                 password,
             },
         };
@@ -52,10 +50,10 @@ export function Login() {
                 <Form.Group controlId="formBasicEmail">
                     <Form.Label>Username</Form.Label>
                     <Form.Control
-                        type="email"
-                        name="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        type="username"
+                        name="username"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
                         placeholder="Enter email"
                     />
                 </Form.Group>

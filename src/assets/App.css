@@ -82,3 +82,7 @@
 /*.placeholder:active {*/
 /*  cursor: grabbing;*/
 /*}*/
+
+.cm-editor.cm-focused {
+  outline: none !important;
+}
