@@ -7,6 +7,7 @@ import NavDropdown from "react-bootstrap/NavDropdown";
 import CodeMirrorCollab from "./CodeMirrorCollab";
 import AnnotationContainer from "./AnnotationContainer";
 import {Responsive, WidthProvider} from "react-grid-layout";
+import logo from "./../assets/logo.png"
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
@@ -42,7 +43,10 @@ export function XMLViewer() {
         <Fragment>
             <Navbar bg="light" expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">Axolotl XML</Navbar.Brand>
+                    <Navbar.Brand>
+                        <span><img src={logo} alt={""} style={{"height": 64, "width": 64, "marginRight": "10px"}}/></span>
+                        Axolotl XML Editor
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">

@@ -4,6 +4,7 @@ import axios from "axios";
 import Cookies from "universal-cookie";
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
+import logo from "../assets/logo.png";
 const cookies = new Cookies();
 
 export function Login() {
@@ -41,7 +42,10 @@ export function Login() {
         <Fragment>
             <Navbar bg="light" expand="lg">
                 <Container>
-                    <Navbar.Brand href="#home">Axolotl XML</Navbar.Brand>
+                    <Navbar.Brand>
+                        <span><img src={logo} alt={""} style={{"height": 64, "width": 64, "marginRight": "10px"}}/></span>
+                        Axolotl XML Editor
+                    </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 </Container>
             </Navbar>
