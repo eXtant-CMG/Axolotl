@@ -1,5 +1,5 @@
 import React from "react";
-import pic from '../assets/oxen.jpg';
+import pic from '../assets/Frankenstein_Manuscript.png';
 import { getAnnotationsFromXml } from '../util/annotation-util'
 import {
     TransformWrapper,
@@ -20,6 +20,7 @@ function AnnotationContainer({onSelection}) {
 
     // Ref to the image DOM element
     const imgEl = useRef();
+    const imgElDummy = useRef();
 
     // The current Annotorious instance
     const [ anno, setAnno ] = useState();
@@ -66,9 +67,10 @@ function AnnotationContainer({onSelection}) {
         setAnno(annotorious);
 
         // Cleanup: destroy current instance
-        return () => {
-            annotorious.destroy();
-        };
+        //TODO: uncomment after ss
+        // return () => {
+        //     annotorious.destroy();
+        // };
     }, []);
 
     // Toggles current tool + button label
@@ -82,20 +84,20 @@ function AnnotationContainer({onSelection}) {
         }
     }
 
-    useEffect(() => {
-        const configuration = {
-            method: "get",
-            url: "https://axolotl-server-db50b102d293.herokuapp.com/image",
-            headers: {
-                "Authorization": `Bearer ${cookies.get("TOKEN")}`
-            },
-            responseType: 'blob'
-        };
-        axios(configuration)
-            .then((response) => {
-                setImgURL(URL.createObjectURL(response.data));
-            })
-    }, [])
+    // useEffect(() => {
+    //     const configuration = {
+    //         method: "get",
+    //         url: "https://axolotl-server-db50b102d293.herokuapp.com/image",
+    //         headers: {
+    //             "Authorization": `Bearer ${cookies.get("TOKEN")}`
+    //         },
+    //         responseType: 'blob'
+    //     };
+    //     axios(configuration)
+    //         .then((response) => {
+    //             setImgURL(URL.createObjectURL(response.data));
+    //         })
+    // }, [])
 
     function createAnnotationUrl() {
         const annotationJson = getAnnotationsFromXml('path')
@@ -108,10 +110,10 @@ function AnnotationContainer({onSelection}) {
     return (
         <div className={"h-100 d-flex flex-column"}>
             <TransformWrapper
-                initialScale={1}
+                initialScale={0.5}
                 minScale={0.05}
                 wheel={{disabled: true}}
-                panning={{disabled: true}}
+                // panning={{disabled: true}}
                 minPositionX={0}
                 minPositionY={300}
                 // centerOnInit={true}
@@ -132,8 +134,8 @@ function AnnotationContainer({onSelection}) {
                         <TransformComponent wrapperStyle={{ maxWidth: "100%", height:"100%", overflow: "scroll"}}>
 
                             <img className=""
-                            ref={imgEl}
-                            src={imgURL}/>
+                            ref={imgElDummy}
+                            src={pic}/>
 
                         </TransformComponent>
                         </div>
