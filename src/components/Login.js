@@ -10,7 +10,7 @@ const cookies = new Cookies();
 export function Login() {
     const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
-    const [login, setLogin] = useState(false);
+    const [loginFailed, setLoginFailed] = useState(false);
 
     const handleSubmit = (e) => {
         const configuration = {
@@ -28,10 +28,11 @@ export function Login() {
                     path: "/",
                 });
                 window.location.href = "/edit";
-                setLogin(true);
             })
             .catch((error) => {
+                setLoginFailed(true);
                 error = new Error();
+
             });
         // prevent the form from refreshing the whole page
         e.preventDefault();
@@ -51,37 +52,40 @@ export function Login() {
             </Navbar>
             <Form onSubmit={(e)=>handleSubmit(e)}>
                 {/* email */}
-                <Form.Group controlId="formBasicEmail">
+                <Form.Group controlId="formBasicEmail" className={"mt-2"}>
                     <Form.Label>Username</Form.Label>
                     <Form.Control
                         type="username"
                         name="username"
                         value={username}
                         onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter email"
+                        placeholder="Enter username"
                     />
                 </Form.Group>
 
                 {/* password */}
-                <Form.Group controlId="formBasicPassword">
+                <Form.Group controlId="formBasicPassword" className={"mt-2"}>
                     <Form.Label>Password</Form.Label>
                     <Form.Control
                         type="password"
                         name="password"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Password"
+                        placeholder="Enter password"
                     />
                 </Form.Group>
 
                 {/* submit button */}
                 <Button
+                    className={"mt-2"}
                     variant="primary"
                     type="submit"
                     onClick={(e) => handleSubmit(e)}
                 >
                     Login
                 </Button>
+                {loginFailed && <p className="text-danger">Username or password incorrect.</p>}
+
             </Form>
         </Fragment>
     )
