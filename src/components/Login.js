@@ -31,7 +31,7 @@ export function Login() {
             })
             .catch((error) => {
                 setLoginFailed(true);
-                error = new Error();
+                // error = new Error();
 
             });
         // prevent the form from refreshing the whole page
@@ -50,43 +50,45 @@ export function Login() {
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 </Container>
             </Navbar>
-            <Form onSubmit={(e)=>handleSubmit(e)}>
-                {/* email */}
-                <Form.Group controlId="formBasicEmail" className={"mt-2"}>
-                    <Form.Label>Username</Form.Label>
-                    <Form.Control
-                        type="username"
-                        name="username"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        placeholder="Enter username"
-                    />
-                </Form.Group>
+            <Container>
+                <Form onSubmit={(e)=>handleSubmit(e)} className="w-50 mx-auto mt-5">
+                    {/* username */}
+                    <Form.Group controlId="formBasicEmail" className={"mt-2"}>
+                        <Form.Label>Username</Form.Label>
+                        <Form.Control
+                            type="username"
+                            name="username"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            placeholder="Enter username"
+                        />
+                    </Form.Group>
 
-                {/* password */}
-                <Form.Group controlId="formBasicPassword" className={"mt-2"}>
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                        type="password"
-                        name="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        placeholder="Enter password"
-                    />
-                </Form.Group>
+                    {/* password */}
+                    <Form.Group controlId="formBasicPassword" className={"mt-2"}>
+                        <Form.Label>Password</Form.Label>
+                        <Form.Control
+                            type="password"
+                            name="password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            placeholder="Enter password"
+                        />
+                    </Form.Group>
 
-                {/* submit button */}
-                <Button
-                    className={"mt-2"}
-                    variant="primary"
-                    type="submit"
-                    onClick={(e) => handleSubmit(e)}
-                >
-                    Login
-                </Button>
-                {loginFailed && <p className="text-danger">Username or password incorrect.</p>}
+                    {/* submit button */}
+                    <Button
+                        className={"mt-2"}
+                        variant="primary"
+                        type="submit"
+                        onClick={(e) => handleSubmit(e)}
+                    >
+                        Login
+                    </Button>
+                    {loginFailed && <p className="text-danger">Username or password incorrect.</p>}
 
-            </Form>
+                </Form>
+            </Container>
         </Fragment>
     )
 }

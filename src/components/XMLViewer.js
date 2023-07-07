@@ -41,7 +41,7 @@ export function XMLViewer() {
 
     return (
         <Fragment>
-            <Navbar bg="light" expand="lg">
+            <Navbar bg="light" expand="lg" className="sticky-top">
                 <Container>
                     <Navbar.Brand>
                         <span><img src={logo} alt={""} style={{"height": 64, "width": 64, "marginRight": "10px"}}/></span>
@@ -61,7 +61,7 @@ export function XMLViewer() {
                     </Navbar.Collapse>
                 </Container>
             </Navbar>
-            <div>
+            <Container>
                 <ResponsiveGridLayout
                     className="layout"
                     layouts={layout}
@@ -85,7 +85,7 @@ export function XMLViewer() {
                     </div>
 
                 </ResponsiveGridLayout>
-            </div>
+            </Container>
         </Fragment>
     )
 }

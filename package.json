@@ -2,7 +2,6 @@
   "name": "xmlviewer",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://127.0.0.1:8000",
   "dependencies": {
     "@codemirror/collab": "github:codemirror/collab",
     "@codemirror/commands": "^6.2.4",
@@ -12,6 +11,7 @@
     "@codemirror/state": "github:codemirror/state",
     "@codemirror/view": "github:codemirror/view",
     "@fortawesome/fontawesome-svg-core": "^6.4.0",
+    "@fortawesome/free-brands-svg-icons": "^6.4.0",
     "@fortawesome/free-solid-svg-icons": "^6.4.0",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@recogito/annotorious": "^2.7.10",

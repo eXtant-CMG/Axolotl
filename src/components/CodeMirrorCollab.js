@@ -225,7 +225,7 @@ export default function CodeMirrorCollab({selection, disconnect}) {
 
     return (
         <div className={"h-100 d-flex flex-column"}>
-            <div>
+            <div className="d-flex">
                 <Button variant="light" title={'export XML'} onClick={exportXML}><FontAwesomeIcon icon={solid("file-export")} /></Button>
                 <Button variant="light" title={'switch views'} onClick={() => switchViews()}><FontAwesomeIcon icon={solid("wand-magic-sparkles")} /></Button>
                 <Button variant="light" title={'drag and move'} className={'drag-handle'}><FontAwesomeIcon icon={solid("up-down-left-right")} /></Button>

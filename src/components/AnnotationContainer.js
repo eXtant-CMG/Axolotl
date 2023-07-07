@@ -1,5 +1,4 @@
 import React from "react";
-import pic from '../assets/Frankenstein_Manuscript.png';
 import { getAnnotationsFromXml } from '../util/annotation-util'
 import {
     TransformWrapper,
@@ -20,7 +19,6 @@ function AnnotationContainer({onSelection}) {
 
     // Ref to the image DOM element
     const imgEl = useRef();
-    const imgElDummy = useRef();
 
     // The current Annotorious instance
     const [ anno, setAnno ] = useState();
@@ -29,6 +27,8 @@ function AnnotationContainer({onSelection}) {
     const [ tool, setTool ] = useState('rect');
 
     const [imgURL, setImgURL] = useState('');
+
+    const [panOrDraw, setPanOrDraw] = useState('pan')
 
     // Init Annotorious when the component
     // mounts, and keep the current 'anno'
@@ -41,6 +41,7 @@ function AnnotationContainer({onSelection}) {
             annotorious = new Annotorious({
                 image: imgEl.current,
                 disableEditor: true,
+                readOnly: true
             });
 
             // Attach event handlers here
@@ -67,10 +68,9 @@ function AnnotationContainer({onSelection}) {
         setAnno(annotorious);
 
         // Cleanup: destroy current instance
-        //TODO: uncomment after ss
-        // return () => {
-        //     annotorious.destroy();
-        // };
+        return () => {
+            annotorious.destroy();
+        };
     }, []);
 
     // Toggles current tool + button label
@@ -84,20 +84,26 @@ function AnnotationContainer({onSelection}) {
         }
     }
 
-    // useEffect(() => {
-    //     const configuration = {
-    //         method: "get",
-    //         url: "https://axolotl-server-db50b102d293.herokuapp.com/image",
-    //         headers: {
-    //             "Authorization": `Bearer ${cookies.get("TOKEN")}`
-    //         },
-    //         responseType: 'blob'
-    //     };
-    //     axios(configuration)
-    //         .then((response) => {
-    //             setImgURL(URL.createObjectURL(response.data));
-    //         })
-    // }, [])
+    function onToolSelect(e) {
+        setPanOrDraw(e.target.value);
+        // TODO: figure out why this works the wrong way around
+        anno.readOnly = panOrDraw === 'draw';
+    }
+
+    useEffect(() => {
+        const configuration = {
+            method: "get",
+            url: "https://axolotl-server-db50b102d293.herokuapp.com/image",
+            headers: {
+                "Authorization": `Bearer ${cookies.get("TOKEN")}`
+            },
+            responseType: 'blob'
+        };
+        axios(configuration)
+            .then((response) => {
+                setImgURL(URL.createObjectURL(response.data));
+            })
+    }, [])
 
     function createAnnotationUrl() {
         const annotationJson = getAnnotationsFromXml('path')
@@ -110,12 +116,13 @@ function AnnotationContainer({onSelection}) {
     return (
         <div className={"h-100 d-flex flex-column"}>
             <TransformWrapper
-                initialScale={0.5}
+                initialScale={0.2} // TODO: calculate this based on image width and element width
                 minScale={0.05}
                 wheel={{disabled: true}}
-                // panning={{disabled: true}}
-                minPositionX={0}
-                minPositionY={300}
+                panning={{disabled: (panOrDraw === 'draw')}}
+                // minPositionX={0}
+                // minPositionY={300}
+
                 // centerOnInit={true}
                 // centerZoomedOut={true}
                 // limitToBounds={false}
@@ -123,19 +130,31 @@ function AnnotationContainer({onSelection}) {
             >
                 {({ zoomIn, zoomOut, resetTransform, centerView}) => (
                     <React.Fragment>
-                        <div className="tools">
+                        <div className="tools d-flex">
                             <Button variant="light" title={'zoom in'} onClick={() => zoomIn(0.1)}><FontAwesomeIcon icon={solid("magnifying-glass-plus")} /></Button>
                             <Button variant="light" title={'zoom out'} onClick={() => zoomOut(0.1)}><FontAwesomeIcon icon={solid("magnifying-glass-minus")} /></Button>
                             <Button variant="light" title={'reset zoom'} onClick={() => resetTransform()}><FontAwesomeIcon icon={solid("magnifying-glass")} /></Button>
                             <Button variant="light" title={'center view'} onClick={() => centerView()}><FontAwesomeIcon icon={solid("magnifying-glass-location")} /></Button>
                             <Button variant="light" title={'drag and move'} className={'drag-handle'}><FontAwesomeIcon icon={solid("up-down-left-right")} /></Button>
+                            <span className="ms-auto p-2 d-inline-flex">
+                            <div className="switcher" onChange={onToolSelect}>
+                                  <input type="radio" name="tool-toggle" value="draw" id="draw" className="switcher__input switcher__input--draw" />
+                                  <label htmlFor="draw" className="switcher__label">Draw</label>
+
+                                  <input type="radio" name="tool-toggle" value="pan" id="pan" className="switcher__input switcher__input--pan" defaultChecked />
+                                  <label htmlFor="pan" className="switcher__label">Pan</label>
+
+                                  <span className="switcher__toggle"></span>
+                            </div>
+
+                            </span>
                         </div>
                         <div className="annotation">
-                        <TransformComponent wrapperStyle={{ maxWidth: "100%", height:"100%", overflow: "scroll"}}>
+                        <TransformComponent wrapperStyle={{ maxWidth: "100%", height:"100%", overflow: "hidden"}}>
 
                             <img className=""
-                            ref={imgElDummy}
-                            src={pic}/>
+                            ref={imgEl}
+                            src={imgURL}/>
 
                         </TransformComponent>
                         </div>

@@ -86,3 +86,68 @@
 .cm-editor.cm-focused {
   outline: none !important;
 }
+
+.container {
+  max-width: 100%;
+  margin-top: 0;
+}
+
+.layout {
+  margin-bottom: 100px;
+}
+
+
+
+
+
+.switcher {
+  display: inline-block;
+  padding: 2px;
+  background: #fff;
+  width: 150px;
+  border-radius: 30px;
+  border: solid 1px #ddd;
+  position: relative;
+}
+
+.switcher__input {
+  display: none;
+}
+
+.switcher__label {
+  float: left;
+  width: 50%;
+  font-size: 12px;
+  line-height: 20px;
+  color: #000;
+  text-align: center;
+  cursor: pointer;
+  position: inherit;
+  z-index: 10;
+  transition: color 0.2s cubic-bezier(0.4, 0.0, 0.2, 1);
+  will-change: transform;
+}
+
+.switcher__toggle {
+  position: absolute;
+  float: left;
+  height: 20px;
+  width: 50%;
+  font-size: 12px;
+  line-height: 20px;
+  cursor: pointer;
+  background-color: black;
+  border-radius: 30px;
+  left: 2px;
+  top: 2px;
+  transition: left 0.25s cubic-bezier(0.4, 0.0, 0.2, 1);
+  will-change: transform;
+}
+
+.switcher__input:checked + .switcher__label {
+  color: #fff;
+}
+
+.switcher__input--pan:checked ~ .switcher__toggle {
+  left: 72px;
+}
