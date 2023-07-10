@@ -19,7 +19,9 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 // initialize socket but don't connect because we might not have auth yet
-const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
+// const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
+const socket = io.connect("http://localhost:8000", {
+
     autoConnect: false,
     query: {
         token: cookies.get("TOKEN")
@@ -83,54 +85,30 @@ function errorCheckAndValidationExtension(setValidation) {
 // Extension for updating the editor using built-in operational transformation
 // functions in CodeMirror and syncing everything with the server
 function updateExtension(startVersion, sock) {
-    let pushing = false;
-    // let unpushed = false;
     let pluginVersion = startVersion;
     let plugin = ViewPlugin.fromClass(class {
         constructor(view) {
             this.view = view;
             sock.on("newVersion", updates => {
-                // console.log("These are the updates I just received! " + sock.id)
-                // console.log(updates)
-                // console.log("This is my current version: " + getSyncedVersion(this.view.state))
                 let changes = receiveUpdates(this.view.state, this.makeUpdates(updates))
                 this.view.dispatch(changes)
-                setTimeout(() => {
-                    pushing = false;
-                    // if (unpushed) {
-                    //     unpushed = false;
-                    // }
-                }, 1000)
-
-                // console.log("This is my next version: " + getSyncedVersion(this.view.state))
-                // console.log(receiveUpdates(this.view.state, this.makeUpdates(updates)))
             });
         }
 
-        update(update) {
-
-            if(update.docChanged) {
-                // console.log('waiting to push')
-                setTimeout(()=>{
-                        // Only emit if the changes are actually yours and not from the server
-                        if(!pushing && sendableUpdates(this.view.state).length) {
-                            pushing = true;
-                            // console.log("I'm updating!");
-                            // console.log(sendableUpdates(this.view.state));
-                            sock.emit("pushUpdates", getSyncedVersion(this.view.state), sendableUpdates(this.view.state))
-                        }
-                        // else if (pushing && sendableUpdates(this.view.state).length) {
-                        //     unpushed = true;
-                        // }
-                }, 1000);
-            }
-        }
-
-        // push() {
-        //     if(!pushing && sendableUpdates(this.view.state).length) {
-        //         console.log("retrying to push", getSyncedVersion(this.view.state))
-        //         pushing = true;
-        //         sock.emit("pushUpdates", getSyncedVersion(this.view.state), sendableUpdates(this.view.state))
+        // update(update) {
+        //     if(update.docChanged) {
+        //
+        //         // console.log('waiting to push')
+        //         // Only emit if the changes are actually yours and not from the server
+        //         if(sendableUpdates(this.view.state).length) {
+        //             // console.log("I'm updating!");
+        //             // console.log(sendableUpdates(this.view.state));
+        //             sock.emit("pushUpdates", getSyncedVersion(this.view.state), sendableUpdates(this.view.state));
+        //         }
+        //     }
+        //     if(update.startState.selection !== update.state.selection) {
+        //         console.log(update.state.selection)
+        //         sock.emit("newSelection", update.state.selection);
         //     }
         // }
 
@@ -149,6 +127,7 @@ export default function CodeMirrorCollab({selection, disconnect}) {
     const editor = useRef();
     const viewRef = useRef();
     const [blockView, setBlockView] = useState(false);
+    const [cursor, setCursor] = useState([]);
 
     if (!socket.connected) socket.connect()
 
@@ -222,6 +201,33 @@ export default function CodeMirrorCollab({selection, disconnect}) {
         }
     }, [disconnect])
 
+
+    // send updates only every 2 seconds to avoid crowding socket (might not be best option)
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if(sendableUpdates(viewRef.current?.state).length) {
+                socket.emit("pushUpdates", getSyncedVersion(viewRef.current?.state), sendableUpdates(viewRef.current?.state));
+            }
+        }, 2000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, []);
+
+    // this and the one above could probably just be one
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if(cursor !== viewRef.current?.state.selection) {
+                setCursor(viewRef.current?.state.selection);
+                socket.emit("newSelection", viewRef.current?.state.selection);
+            }
+        }, 2000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [cursor])
 
     return (
         <div className={"h-100 d-flex flex-column"}>
