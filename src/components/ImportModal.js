@@ -14,7 +14,7 @@ export function ImportModal({show, switchShow}) {
 
     const handleTranskribusLogin = (e) => {
         const params = new URLSearchParams({ user: username, pw: password });
-        axios.post('http://localhost:8000/transkribus-proxy', params)
+        axios.post('https://axolotl-server-db50b102d293.herokuapp.com/transkribus-proxy', params)
             .then((result) => {
                 setSuccessfullyLoggedIn(true);
                 cookies.set("TR-TOKEN", result.data.data, {
