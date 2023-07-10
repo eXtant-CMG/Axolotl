@@ -25,6 +25,7 @@ export function Login() {
             .then((result) => {
                 cookies.set("TOKEN", result.data.token, {
                     path: "/",
+                    maxAge: 2 * 60 * 60 * 1000
                 });
                 window.location.href = "/edit";
             })
