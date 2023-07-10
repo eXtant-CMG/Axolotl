@@ -36,7 +36,7 @@ function App() {
                                 <span className="m-2">View source</span>
                             </a>
                         </Col>
-                        <Col className="text-end m-3">
+                        <Col className="text-end m-3" style={{fontSize: '10px'}}>
                             <div className="text-end">Created by <a className="text-muted text-decoration-none" href="https://github.com/NoonShin/" target="_blank">Nooshin S. Asadi</a></div>
                             <div className="text-end">At the <a className="text-muted text-decoration-none" href="https://www.uantwerpen.be/en/" target="_blank">University of Antwerp</a></div>
                         </Col>

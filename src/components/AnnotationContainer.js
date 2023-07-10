@@ -103,6 +103,9 @@ function AnnotationContainer({onSelection}) {
             .then((response) => {
                 setImgURL(URL.createObjectURL(response.data));
             })
+            .catch((error) => {
+                console.log(error)
+            })
     }, [])
 
     function createAnnotationUrl() {

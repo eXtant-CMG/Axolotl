@@ -3,8 +3,7 @@ import {Button, Form} from "react-bootstrap";
 import axios from "axios";
 import Cookies from "universal-cookie";
 import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import logo from "../assets/logo.png";
+import {CustomNavbar} from "./CustomNavbar";
 const cookies = new Cookies();
 
 export function Login() {
@@ -41,15 +40,7 @@ export function Login() {
 
     return(
         <Fragment>
-            <Navbar bg="light" expand="lg">
-                <Container>
-                    <Navbar.Brand>
-                        <span><img src={logo} alt={""} style={{"height": 64, "width": 64, "marginRight": "10px"}}/></span>
-                        Axolotl XML Editor
-                    </Navbar.Brand>
-                    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                </Container>
-            </Navbar>
+            <CustomNavbar />
             <Container>
                 <Form onSubmit={(e)=>handleSubmit(e)} className="w-50 mx-auto mt-5">
                     {/* username */}
