@@ -214,18 +214,19 @@ export default function CodeMirrorCollab({selection, disconnect}) {
     }, []);
 
     // this and the one above could probably just be one
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if(cursor !== viewRef.current?.state.selection) {
-                setCursor(viewRef.current?.state.selection);
-                socket.emit("newSelection", viewRef.current?.state.selection);
-            }
-        }, 2000);
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [cursor])
+    //TODO uncomment this later
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         if(cursor !== viewRef.current?.state.selection) {
+    //             setCursor(viewRef.current?.state.selection);
+    //             socket.emit("newSelection", viewRef.current?.state.selection);
+    //         }
+    //     }, 2000);
+    //
+    //     return () => {
+    //         clearInterval(interval);
+    //     };
+    // }, [cursor])
 
     return (
         <div className={"h-100 d-flex flex-column"}>

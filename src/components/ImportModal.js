@@ -1,13 +1,87 @@
 import Modal from "react-bootstrap/Modal";
-import {Button} from "react-bootstrap";
+import {Button, Form} from "react-bootstrap";
+import {Fragment, useState} from "react";
+import axios from "axios";
 
 export function ImportModal({show, switchShow}) {
+    const [username, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [loginFailed, setLoginFailed] = useState(false);
+    const [successfullyLoggedIn, setSuccessfullyLoggedIn] = useState(false);
+
+    const handleTranskribusLogin = (e) => {
+        const configuration = {
+            method: "post",
+            url: "https://transkribus.eu/TrpServer/rest/auth/login",
+            data: {
+                user: username,
+                pw: password,
+            }
+        };
+
+        axios(configuration)
+            .then((result) => {
+                setSuccessfullyLoggedIn(true);
+                console.log(result);
+            })
+            .catch((error) => {
+                setLoginFailed(true);
+                // error = new Error();
+
+            });
+        // prevent the form from refreshing the whole page
+        e.preventDefault();
+    }
+
     return(
         <Modal show={show} onHide={switchShow}>
             <Modal.Header closeButton>
                 <Modal.Title>Import from Transkribus</Modal.Title>
             </Modal.Header>
-            <Modal.Body>Log in to Transkribus.</Modal.Body>
+            <Modal.Body>
+                {!successfullyLoggedIn ?
+                    <Fragment>
+                        <p>Log in to Transkribus.</p>
+                        <Form onSubmit={(e)=>handleTranskribusLogin(e)} className="w-50 m1-auto mt-1">
+                            {/* username */}
+                            <Form.Group controlId="formBasicEmail" className={"mt-2"}>
+                                <Form.Label>Username</Form.Label>
+                                <Form.Control
+                                    type="username"
+                                    name="username"
+                                    value={username}
+                                    onChange={(e) => setUsername(e.target.value)}
+                                    placeholder="Enter username"
+                                />
+                            </Form.Group>
+
+                            {/* password */}
+                            <Form.Group controlId="formBasicPassword" className={"mt-2"}>
+                                <Form.Label>Password</Form.Label>
+                                <Form.Control
+                                    type="password"
+                                    name="password"
+                                    value={password}
+                                    onChange={(e) => setPassword(e.target.value)}
+                                    placeholder="Enter password"
+                                />
+                            </Form.Group>
+
+                            {/* submit button */}
+                            <Button
+                                className={"mt-2"}
+                                variant="primary"
+                                type="submit"
+                                onClick={(e) => handleTranskribusLogin(e)}
+                            >
+                                Login
+                            </Button>
+                            {loginFailed && <p className="text-danger">Username or password incorrect.</p>}
+
+                        </Form>
+                    </Fragment>
+                : <p> Successfully logged in! </p> }
+            </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={switchShow}>
                     Cancel
