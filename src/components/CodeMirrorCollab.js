@@ -19,9 +19,7 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 // initialize socket but don't connect because we might not have auth yet
-// const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
-const socket = io.connect("http://localhost:8000", {
-
+const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
     autoConnect: false,
     query: {
         token: cookies.get("TOKEN")
