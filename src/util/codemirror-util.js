@@ -1,6 +1,6 @@
 import {Decoration, MatchDecorator, WidgetType} from "@codemirror/view";
 import {syntaxTree} from "@codemirror/language";
-import {StateField} from "@codemirror/state";
+import {StateEffect, StateField} from "@codemirror/state";
 import {EditorView} from "codemirror";
 import {XMLValidator} from "fast-xml-parser";
 
@@ -59,6 +59,41 @@ export const baseTheme = EditorView.baseTheme({
 })
 
 export const errorLineDeco = Decoration.line({ class: "error-line" });
+
+export const addHighlight = StateEffect.define()
+export const removeHighlight = StateEffect.define()
+
+export function createHighlightDecoration(socketId) {
+    return Decoration.mark({
+        attributes: { style: "background-color: #4da1de4d"},
+        socketId: socketId
+    })
+}
+
+export class CheckboxWidget extends WidgetType {
+    constructor(username, socketId) {
+        super()
+        this.username = username;
+        this.socketId = socketId;
+    }
+
+    eq(other) { return other.socketId === this.socketId }
+
+    toDOM(view) {
+        let wrap = document.createElement("span")
+        wrap.setAttribute("aria-hidden", "true")
+        wrap.appendChild(document.createTextNode(this.username))
+        wrap.style.color = "black"
+        wrap.style.fontSize = "7px"
+        wrap.style.position = "absolute"
+        wrap.style.borderRadius = "10px"
+        wrap.style.backgroundColor = "#4da1de4d"
+        return wrap
+    }
+
+    ignoreEvent(event) { return false }
+}
+
 
 function treeMatcher(view) {
     let widgets = []

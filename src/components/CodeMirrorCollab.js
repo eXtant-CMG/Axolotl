@@ -4,13 +4,20 @@ import {ViewPlugin, drawSelection, Decoration, tooltips, keymap} from "@codemirr
 import {xml} from "@codemirror/lang-xml"
 import {syntaxTree} from "@codemirror/language"
 import {SearchCursor} from "@codemirror/search"
-import {ChangeSet, EditorState, Compartment, EditorSelection} from "@codemirror/state"
+import {ChangeSet, EditorState, Compartment, EditorSelection, StateField} from "@codemirror/state"
 import {indentWithTab} from "@codemirror/commands"
 import {receiveUpdates, sendableUpdates, collab, getSyncedVersion} from "@codemirror/collab"
 import {io} from 'socket.io-client'
 import {saveAs} from 'file-saver';
 import schema from '../util/jsonSchema.json'
-import {baseTheme, errorLineDeco, placeholderMatcher, checkXML} from '../util/codemirror-util'
+import {
+    baseTheme,
+    errorLineDeco,
+    placeholderMatcher,
+    checkXML,
+    addHighlight,
+    CheckboxWidget, createHighlightDecoration, removeHighlight
+} from '../util/codemirror-util'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Button from 'react-bootstrap/Button'
@@ -19,6 +26,7 @@ import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
 // initialize socket but don't connect because we might not have auth yet
+
 const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
     autoConnect: false,
     query: {
@@ -80,6 +88,40 @@ function errorCheckAndValidationExtension(setValidation) {
     return [plugin]
 }
 
+const parallelCursorHighlightExtension = StateField.define({
+    create() {
+        return Decoration.none
+    },
+    update(decorations, transaction) {
+        decorations = decorations.map(transaction.changes)
+        for (let effect of transaction.effects) {
+            if (effect.is(addHighlight)) {
+                const [socketId, selectionDict] = effect.value;
+                let additions = []
+                for (let i = 0; i < selectionDict.selection.ranges.length; i++) {
+                    const range = [selectionDict.selection.ranges[i].anchor, selectionDict.selection.ranges[i].head].sort(function (a, b) {  return a - b;  });
+                    if (range[0] !== range[1]) additions.push(createHighlightDecoration(socketId).range(range[0], range[1]));
+                    additions.push(Decoration.widget({
+                        widget: new CheckboxWidget(selectionDict.username, socketId),
+                        side: 1
+                    }).range(selectionDict.selection.ranges[i].head));
+                }
+                // remove previous selection (both cursor and highlight)
+                decorations = decorations.update({
+                    filter: (f, t, value) => value.spec.socketId !== socketId && value.spec.widget?.socketId !== socketId,
+                })
+                decorations = decorations.update({ add: additions, sort: true })
+            } else if (effect.is(removeHighlight)) {
+                decorations = decorations.update({
+                    filter: (f, t, value) => value.spec.socketId !== effect.value[0] && value.spec.widget?.socketId !== effect.value[0],
+                })
+            }
+        }
+        return decorations
+    },
+    provide: (f) => EditorView.decorations.from(f),
+})
+
 // Extension for updating the editor using built-in operational transformation
 // functions in CodeMirror and syncing everything with the server
 function updateExtension(startVersion, sock) {
@@ -91,24 +133,25 @@ function updateExtension(startVersion, sock) {
                 let changes = receiveUpdates(this.view.state, this.makeUpdates(updates))
                 this.view.dispatch(changes)
             });
-        }
 
-        // update(update) {
-        //     if(update.docChanged) {
-        //
-        //         // console.log('waiting to push')
-        //         // Only emit if the changes are actually yours and not from the server
-        //         if(sendableUpdates(this.view.state).length) {
-        //             // console.log("I'm updating!");
-        //             // console.log(sendableUpdates(this.view.state));
-        //             sock.emit("pushUpdates", getSyncedVersion(this.view.state), sendableUpdates(this.view.state));
-        //         }
-        //     }
-        //     if(update.startState.selection !== update.state.selection) {
-        //         console.log(update.state.selection)
-        //         sock.emit("newSelection", update.state.selection);
-        //     }
-        // }
+            // recheck this, it works fine but might be sending some stuff multiple times
+            sock.on("newSelection", selections => {
+                for (const [socketId, selectionDict] of Object.entries(selections)) {
+                    if (socketId !== sock.id) {
+                        if (selectionDict.delete) {
+                            view.dispatch({
+                                effects: removeHighlight.of([socketId, selectionDict]),
+                            })
+                        }
+                        else {
+                            view.dispatch({
+                                effects: addHighlight.of([socketId, selectionDict]),
+                            })
+                        }
+                    }
+                }
+            })
+        }
 
         makeUpdates(updates) {
             return updates.map(u => ({
@@ -148,7 +191,7 @@ export default function CodeMirrorCollab({selection, disconnect}) {
             let state = EditorState.create({
                 doc: text,
                 extensions: [basicSetup, baseTheme, xml({elements: schema}), updateExtension(version, socket),
-                                errorCheckAndValidationExtension(setValidation), XMLView.of([]),
+                                errorCheckAndValidationExtension(setValidation), XMLView.of([]), parallelCursorHighlightExtension,
                                 EditorState.allowMultipleSelections.of(true), drawSelection(),
                                 tooltips({parent: document.body}), keymap.of([indentWithTab])]
             });
@@ -214,19 +257,18 @@ export default function CodeMirrorCollab({selection, disconnect}) {
     }, []);
 
     // this and the one above could probably just be one
-    //TODO uncomment this later
-    // useEffect(() => {
-    //     const interval = setInterval(() => {
-    //         if(cursor !== viewRef.current?.state.selection) {
-    //             setCursor(viewRef.current?.state.selection);
-    //             socket.emit("newSelection", viewRef.current?.state.selection);
-    //         }
-    //     }, 2000);
-    //
-    //     return () => {
-    //         clearInterval(interval);
-    //     };
-    // }, [cursor])
+    useEffect(() => {
+        const interval = setInterval(() => {
+            if(cursor !== viewRef.current?.state.selection) {
+                setCursor(viewRef.current?.state.selection);
+                socket.emit("newSelection", viewRef.current?.state.selection);
+            }
+        }, 2000);
+
+        return () => {
+            clearInterval(interval);
+        };
+    }, [cursor])
 
     return (
         <div className={"h-100 d-flex flex-column"}>
