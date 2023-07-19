@@ -1,3 +1,5 @@
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # Axolotl XML Editor
 
 This lightweight editor has been developed as an embeddable tool for online digital scholarly editions, providing the users with the ability to work on the same files simultaneously. Axolotl makes use of CodeMirror and Operational Transformation to achieve this. This is currently a beta version.
