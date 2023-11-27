@@ -20,8 +20,6 @@ function AnnotationContainer({onSelection}) {
     // Ref to the image DOM element
     const imgEl = useRef();
 
-    const imgElDummy = useRef();
-
     // The current Annotorious instance
     const [ anno, setAnno ] = useState();
 
@@ -70,10 +68,9 @@ function AnnotationContainer({onSelection}) {
         setAnno(annotorious);
 
         // Cleanup: destroy current instance
-        // TODO: uncomment later
-        // return () => {
-        //     annotorious.destroy();
-        // };
+        return () => {
+            annotorious.destroy();
+        };
     }, []);
 
     // Toggles current tool + button label
@@ -142,24 +139,24 @@ function AnnotationContainer({onSelection}) {
                             <Button variant="light" title={'reset zoom'} onClick={() => resetTransform()}><FontAwesomeIcon icon={solid("magnifying-glass")} /></Button>
                             <Button variant="light" title={'center view'} onClick={() => centerView()}><FontAwesomeIcon icon={solid("magnifying-glass-location")} /></Button>
                             <Button variant="light" title={'drag and move'} className={'drag-handle'}><FontAwesomeIcon icon={solid("up-down-left-right")} /></Button>
-                            {/*<span className="ms-auto p-2 d-inline-flex">*/}
-                            {/*<div className="switcher" onChange={onToolSelect}>*/}
-                            {/*      <input type="radio" name="tool-toggle" value="draw" id="draw" className="switcher__input switcher__input--draw" />*/}
-                            {/*      <label htmlFor="draw" className="switcher__label">Draw</label>*/}
+                            <span className="ms-auto p-2 d-inline-flex">
+                            <div className="switcher" onChange={onToolSelect}>
+                                  <input type="radio" name="tool-toggle" value="draw" id="draw" className="switcher__input switcher__input--draw" />
+                                  <label htmlFor="draw" className="switcher__label">Draw</label>
 
-                            {/*      <input type="radio" name="tool-toggle" value="pan" id="pan" className="switcher__input switcher__input--pan" defaultChecked />*/}
-                            {/*      <label htmlFor="pan" className="switcher__label">Pan</label>*/}
+                                  <input type="radio" name="tool-toggle" value="pan" id="pan" className="switcher__input switcher__input--pan" defaultChecked />
+                                  <label htmlFor="pan" className="switcher__label">Pan</label>
 
-                            {/*      <span className="switcher__toggle"></span>*/}
-                            {/*</div>*/}
+                                  <span className="switcher__toggle"></span>
+                            </div>
 
-                            {/*</span>*/}
+                            </span>
                         </div>
                         <div className="annotation">
                         <TransformComponent wrapperStyle={{ maxWidth: "100%", height:"100%", overflow: "hidden"}}>
 
                             <img className=""
-                            ref={imgElDummy}
+                            ref={imgEl}
                             src={imgURL}/>
 
                         </TransformComponent>
