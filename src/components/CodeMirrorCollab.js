@@ -23,16 +23,17 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Button from 'react-bootstrap/Button'
 import {Row} from "react-bootstrap";
 import Cookies from "universal-cookie";
+import {convertZonesToJson} from "../util/annotation-util";
 
 const cookies = new Cookies();
 // initialize socket but don't connect because we might not have auth yet
 
-const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
-    autoConnect: false,
-    query: {
-        token: cookies.get("TOKEN")
-    }
-});
+// const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
+//     autoConnect: false,
+//     query: {
+//         token: cookies.get("TOKEN")
+//     }
+// });
 
 const XMLView = new Compartment()
 
@@ -163,14 +164,14 @@ function updateExtension(startVersion, sock) {
     return [collab({startVersion: pluginVersion}), plugin]
 }
 
-export default function CodeMirrorCollab({selection, disconnect}) {
+export default function CodeMirrorCollab({importedFile, onSelection, setSelection, disconnect, setAnnoZones}) {
     const [validation, setValidation] = useState({"err": {"msg": ""}})
     const editor = useRef();
     const viewRef = useRef();
     const [blockView, setBlockView] = useState(false);
     const [cursor, setCursor] = useState([]);
 
-    if (!socket.connected) socket.connect()
+    // if (!socket.connected) socket.connect()
 
     function exportXML() {
         let blob = new Blob([viewRef.current?.state.doc.toString()], {type: "application/xml"})
@@ -185,38 +186,69 @@ export default function CodeMirrorCollab({selection, disconnect}) {
         setBlockView(!blockView)
     }
 
+//TODO: this does not use its socket connection
     useEffect(() => {
 
-        socket.on("firstVersion", (text, version) => {
-            let state = EditorState.create({
-                doc: text,
-                extensions: [basicSetup, baseTheme, xml({elements: schema}), updateExtension(version, socket),
-                                errorCheckAndValidationExtension(setValidation), XMLView.of([]), parallelCursorHighlightExtension,
-                                EditorState.allowMultipleSelections.of(true), drawSelection(),
-                                tooltips({parent: document.body}), keymap.of([indentWithTab])]
-            });
+        let state = EditorState.create({
+            doc: '<p>Empty sample</p>',
+            extensions: [basicSetup, baseTheme, xml({elements: schema}),
+                errorCheckAndValidationExtension(setValidation), XMLView.of([]),
+                EditorState.allowMultipleSelections.of(true), drawSelection(),
+                tooltips({parent: document.body}), keymap.of([indentWithTab])]
+        });
 
-            setValidation(checkXML(state.doc.toString()))
-            viewRef.current = new EditorView({
-                state,
-                parent: editor.current
-            })
+        setValidation(checkXML(state.doc.toString()))
+        if (!viewRef.current) viewRef.current = new EditorView({
+            state,
+            parent: editor.current
         })
 
-        socket.on("disconnect", function(reason) {
-            console.log(reason)
-            viewRef.current?.destroy();
-        })
 
         return () => {
             viewRef.current?.destroy();
         }
 
     }, []);
+    //
+    // useEffect(() => {
+    //
+    //     socket.on("firstVersion", (text, version) => {
+    //         let state = EditorState.create({
+    //             doc: text,
+    //             extensions: [basicSetup, baseTheme, xml({elements: schema}), updateExtension(version, socket),
+    //                             errorCheckAndValidationExtension(setValidation), XMLView.of([]), parallelCursorHighlightExtension,
+    //                             EditorState.allowMultipleSelections.of(true), drawSelection(),
+    //                             tooltips({parent: document.body}), keymap.of([indentWithTab])]
+    //         });
+    //
+    //         setValidation(checkXML(state.doc.toString()))
+    //         viewRef.current = new EditorView({
+    //             state,
+    //             parent: editor.current
+    //         })
+    //     })
+    //
+    //     socket.on("disconnect", function(reason) {
+    //         console.log(reason)
+    //         viewRef.current?.destroy();
+    //     })
+    //
+    //     return () => {
+    //         viewRef.current?.destroy();
+    //     }
+    //
+    // }, []);
+
+    const extractZones = (doc) => {
+        const parser = new DOMParser();
+        const xmlDoc = parser.parseFromString(doc, 'application/xml');
+        const zones = xmlDoc.getElementsByTagName('zone');
+        setAnnoZones(convertZonesToJson(zones));
+    }
 
     useEffect(() => {
         if (viewRef.current) {
-            let cursor = new SearchCursor(viewRef.current?.state.doc, '\'#' + selection + '\'');
+            let cursor = new SearchCursor(viewRef.current?.state.doc, '#' + onSelection);
             cursor.next()
 
             const node = syntaxTree(viewRef.current?.state).cursorAt(cursor.value.from).node
@@ -233,42 +265,58 @@ export default function CodeMirrorCollab({selection, disconnect}) {
             // viewRef.current?.focus();
             // editor.current?.firstChild.classList.add("cm-focused")
         }
-    }, [selection])
+    }, [onSelection])
 
     // If parents wants us to disconnect socket, we do
+    // useEffect(() => {
+    //     if(disconnect) {
+    //         socket.disconnect();
+    //     }
+    // }, [disconnect])
+
+
+    //TODO: this is not good, it is not connected to anything
     useEffect(() => {
-        if(disconnect) {
-            socket.disconnect();
+        if (importedFile) {
+            extractZones(importedFile);
+            let state = EditorState.create({
+                doc: importedFile,
+                extensions: [basicSetup, baseTheme, xml({elements: schema}),
+                    errorCheckAndValidationExtension(setValidation), XMLView.of([]),
+                    EditorState.allowMultipleSelections.of(true), drawSelection(),
+                    tooltips({parent: document.body}), keymap.of([indentWithTab])]
+            });
+            viewRef.current?.setState(state)
         }
-    }, [disconnect])
+    }, [importedFile])
 
 
     // send updates only every 2 seconds to avoid crowding socket (might not be best option)
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if(sendableUpdates(viewRef.current?.state).length) {
-                socket.emit("pushUpdates", getSyncedVersion(viewRef.current?.state), sendableUpdates(viewRef.current?.state));
-            }
-        }, 2000);
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, []);
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         if(sendableUpdates(viewRef.current?.state).length) {
+    //             socket.emit("pushUpdates", getSyncedVersion(viewRef.current?.state), sendableUpdates(viewRef.current?.state));
+    //         }
+    //     }, 2000);
+    //
+    //     return () => {
+    //         clearInterval(interval);
+    //     };
+    // }, []);
 
     // this and the one above could probably just be one
-    useEffect(() => {
-        const interval = setInterval(() => {
-            if(cursor !== viewRef.current?.state.selection) {
-                setCursor(viewRef.current?.state.selection);
-                socket.emit("newSelection", viewRef.current?.state.selection);
-            }
-        }, 2000);
-
-        return () => {
-            clearInterval(interval);
-        };
-    }, [cursor])
+    // useEffect(() => {
+    //     const interval = setInterval(() => {
+    //         if(cursor !== viewRef.current?.state.selection) {
+    //             setCursor(viewRef.current?.state.selection);
+    //             socket.emit("newSelection", viewRef.current?.state.selection);
+    //         }
+    //     }, 2000);
+    //
+    //     return () => {
+    //         clearInterval(interval);
+    //     };
+    // }, [cursor])
 
     return (
         <div className={"h-100 d-flex flex-column"}>

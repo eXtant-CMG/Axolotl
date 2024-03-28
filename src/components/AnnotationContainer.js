@@ -12,10 +12,11 @@ import { solid } from '@fortawesome/fontawesome-svg-core/import.macro'
 import Button from 'react-bootstrap/Button'
 import '@recogito/annotorious/dist/annotorious.min.css';
 import axios from "axios";
+import UTIF from "utif";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
 
-function AnnotationContainer({onSelection}) {
+function AnnotationContainer({importedImg, onSelection, setSelection, annoZones}) {
 
     // Ref to the image DOM element
     const imgEl = useRef();
@@ -58,10 +59,10 @@ function AnnotationContainer({onSelection}) {
             });
 
             annotorious.on('selectAnnotation', function(annotation, element) {
-                onSelection(element.getAttribute('data-id'));
+                setSelection(element.getAttribute('data-id'));
             });
 
-            annotorious.loadAnnotations(createAnnotationUrl());
+            if (annoZones) annotorious.loadAnnotations(createAnnotationUrl());
         }
 
         // Keep current Annotorious instance in state
@@ -71,7 +72,7 @@ function AnnotationContainer({onSelection}) {
         return () => {
             annotorious.destroy();
         };
-    }, []);
+    }, [annoZones]);
 
     // Toggles current tool + button label
     const toggleTool = () => {
@@ -108,11 +109,26 @@ function AnnotationContainer({onSelection}) {
             })
     }, [])
 
+    useEffect(() => {
+        if (importedImg) {
+            setImgURL(URL.createObjectURL(importedImg));
+        }
+    }, [importedImg])
+
+    //TODO: this has some problems when it's empty
     function createAnnotationUrl() {
-        const annotationJson = getAnnotationsFromXml('path')
-        const blob = new Blob([JSON.stringify(annotationJson)], {type: "application/json"})
-        // const blob = new Blob([JSON.stringify('')], {type: "application/json"})
-        return(URL.createObjectURL(blob));
+        try {
+            if (annoZones) {
+                const blob = new Blob([JSON.stringify(annoZones)], {type: "application/json"})
+                return (URL.createObjectURL(blob));
+            }
+            else return ''
+
+        }
+        catch (e) {
+            console.error(e.message);
+            return('');
+        }
     }
 
 
@@ -168,6 +184,33 @@ function AnnotationContainer({onSelection}) {
     );
 }
 
+// TODO: make use of this
+function TiffImage({ src }) {
+    const [imageUrl, setImageUrl] = useState('');
+
+    useEffect(() => {
+        fetch(src)
+            .then((res) => {
+                if (!res.ok) throw new Error('Network response was not ok');
+                return res.arrayBuffer();
+            })
+            .then((arrayBuffer) => {
+                // Parse the TIFF file
+                const tiffArray = new Uint8Array(arrayBuffer);
+                const ifds = UTIF.decode(tiffArray);
+                UTIF.decodeImages(tiffArray, ifds);
+                const rgba = UTIF.toRGBA8(ifds[0]); // Assuming the TIFF has at least one image
+
+                // Create a blob from the RGBA data
+                const blob = new Blob([rgba], { type: 'image/png' });
+                const url = URL.createObjectURL(blob);
+                setImageUrl(url);
+            })
+            .catch((error) => console.error('Error:', error));
+    }, [src]);
+
+    return imageUrl ? <img src={imageUrl} alt="Tiff content" /> : <p>Loading...</p>;
+}
 
 export default AnnotationContainer;
 

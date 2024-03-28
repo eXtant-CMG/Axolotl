@@ -14,8 +14,12 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 
 export function XMLViewer() {
     const [selectedZone, setSelectedZone] = useState("");
+    const [annoZones, setAnnoZones] = useState()
     const [socketDisconnect, setSocketDisconnect] = useState(false);
     const [layout, setLayout] = useState(AppUtil.sideBySideLayout);
+
+    const [importedFile, setImportedFile] = useState();
+    const [importedImg, setImportedImg] = useState();
 
     const [show, setShow] = useState(false);
 
@@ -45,7 +49,7 @@ export function XMLViewer() {
 
     return (
         <Fragment>
-            <CustomNavbar loggedIn={true} helperFunctions={{transkribusModal, resetLayout, handleLogout}} />
+            <CustomNavbar loggedIn={true} setImportedFile={setImportedFile} setImportedImg={setImportedImg} helperFunctions={{transkribusModal, resetLayout, handleLogout}} />
             <Container>
                 <ImportModal show={show} switchShow={transkribusModal} />
                 <ResponsiveGridLayout
@@ -61,12 +65,12 @@ export function XMLViewer() {
                 >
                     <div key="1">
                         <div className="border bg-light h-100 p-3">
-                            <CodeMirrorCollab selection={selectedZone} disconnect={socketDisconnect}/>
+                            <CodeMirrorCollab importedFile={importedFile} onSelection={selectedZone} setSelection={setSelectedZone}  disconnect={socketDisconnect} setAnnoZones={setAnnoZones}/>
                         </div>
                     </div>
                     <div key="2">
                         <div className="border bg-light h-100 p-3">
-                            <AnnotationContainer onSelection={setSelectedZone}/>
+                            <AnnotationContainer importedImg={importedImg} onSelection={selectedZone} setSelection={setSelectedZone}  annoZones={annoZones}/>
                         </div>
                     </div>
 
