@@ -137,7 +137,7 @@ function AnnotationContainer({importedImg, onSelection, setSelection, annoZones}
             <TransformWrapper
                 initialScale={0.2} // TODO: calculate this based on image width and element width
                 minScale={0.05}
-                wheel={{disabled: true}}
+                // wheel={{disabled: true}}
                 panning={{disabled: (panOrDraw === 'draw')}}
                 // minPositionX={0}
                 // minPositionY={300}
