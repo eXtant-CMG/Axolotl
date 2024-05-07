@@ -15,7 +15,7 @@ const ResponsiveGridLayout = WidthProvider(Responsive);
 export function XMLViewer() {
     const [selectedZone, setSelectedZone] = useState("");
     const [socketDisconnect, setSocketDisconnect] = useState(false);
-    const [layout, setLayout] = useState(AppUtil.sideBySideLayout);
+    const [layout, setLayout] = useState(AppUtil.onlyTextLayout);
 
     const [show, setShow] = useState(false);
 
@@ -45,7 +45,7 @@ export function XMLViewer() {
 
     return (
         <Fragment>
-            <CustomNavbar loggedIn={true} helperFunctions={{transkribusModal, resetLayout, handleLogout}} />
+            <CustomNavbar loggedIn={true} helperFunctions={{handleLogout}} />
             <Container>
                 <ImportModal show={show} switchShow={transkribusModal} />
                 <ResponsiveGridLayout
@@ -62,11 +62,6 @@ export function XMLViewer() {
                     <div key="1">
                         <div className="border bg-light h-100 p-3">
                             <CodeMirrorCollab selection={selectedZone} disconnect={socketDisconnect}/>
-                        </div>
-                    </div>
-                    <div key="2">
-                        <div className="border bg-light h-100 p-3">
-                            <AnnotationContainer onSelection={setSelectedZone}/>
                         </div>
                     </div>
 

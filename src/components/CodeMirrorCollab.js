@@ -214,26 +214,26 @@ export default function CodeMirrorCollab({selection, disconnect}) {
 
     }, []);
 
-    useEffect(() => {
-        if (viewRef.current) {
-            let cursor = new SearchCursor(viewRef.current?.state.doc, '\'#' + selection + '\'');
-            cursor.next()
-
-            const node = syntaxTree(viewRef.current?.state).cursorAt(cursor.value.from).node
-
-            viewRef.current?.dispatch({
-                selection: EditorSelection.create([
-                    EditorSelection.range(node.from, node.to),
-                    EditorSelection.cursor(node.from)
-                ], 1),
-                scrollIntoView: true
-            })
-
-            //TODO this is me trying to refocus after selection
-            // viewRef.current?.focus();
-            // editor.current?.firstChild.classList.add("cm-focused")
-        }
-    }, [selection])
+    // useEffect(() => {
+    //     if (viewRef.current) {
+    //         let cursor = new SearchCursor(viewRef.current?.state.doc, '\'#' + selection + '\'');
+    //         cursor.next()
+    //
+    //         const node = syntaxTree(viewRef.current?.state).cursorAt(cursor.value.from).node
+    //
+    //         viewRef.current?.dispatch({
+    //             selection: EditorSelection.create([
+    //                 EditorSelection.range(node.from, node.to),
+    //                 EditorSelection.cursor(node.from)
+    //             ], 1),
+    //             scrollIntoView: true
+    //         })
+    //
+    //         //TODO this is me trying to refocus after selection
+    //         // viewRef.current?.focus();
+    //         // editor.current?.firstChild.classList.add("cm-focused")
+    //     }
+    // }, [selection])
 
     // If parents wants us to disconnect socket, we do
     useEffect(() => {
@@ -247,7 +247,12 @@ export default function CodeMirrorCollab({selection, disconnect}) {
     useEffect(() => {
         const interval = setInterval(() => {
             if(sendableUpdates(viewRef.current?.state).length) {
-                socket.emit("pushUpdates", getSyncedVersion(viewRef.current?.state), sendableUpdates(viewRef.current?.state));
+                try {
+                    socket.emit("pushUpdates", getSyncedVersion(viewRef.current?.state), sendableUpdates(viewRef.current?.state));
+                }
+                catch (e) {
+                    console.error(e)
+                }
             }
         }, 2000);
 
