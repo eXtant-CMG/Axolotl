@@ -7,6 +7,7 @@ import {Responsive, WidthProvider} from "react-grid-layout";
 import Cookies from "universal-cookie";
 import {CustomNavbar} from "./CustomNavbar";
 import {ImportModal} from "./ImportModal";
+import {onlyTextLayout} from "../util/app-util";
 const cookies = new Cookies();
 
 
@@ -16,7 +17,7 @@ export function XMLViewer() {
     const [selectedZone, setSelectedZone] = useState("");
     const [annoZones, setAnnoZones] = useState()
     const [socketDisconnect, setSocketDisconnect] = useState(false);
-    const [layout, setLayout] = useState(AppUtil.sideBySideLayout);
+    const [layout, setLayout] = useState(AppUtil.onlyTextLayout);
 
     const [importedFile, setImportedFile] = useState();
     const [importedImg, setImportedImg] = useState();
@@ -49,7 +50,7 @@ export function XMLViewer() {
 
     return (
         <Fragment>
-            <CustomNavbar loggedIn={true} setImportedFile={setImportedFile} setImportedImg={setImportedImg} helperFunctions={{transkribusModal, resetLayout, handleLogout}} />
+            <CustomNavbar loggedIn={true} setImportedFile={setImportedFile} setImportedImg={setImportedImg} helperFunctions={{handleLogout}} />
             <Container>
                 <ImportModal show={show} switchShow={transkribusModal} />
                 <ResponsiveGridLayout
@@ -66,11 +67,6 @@ export function XMLViewer() {
                     <div key="1">
                         <div className="border bg-light h-100 p-3">
                             <CodeMirrorCollab importedFile={importedFile} onSelection={selectedZone} setSelection={setSelectedZone}  disconnect={socketDisconnect} setAnnoZones={setAnnoZones}/>
-                        </div>
-                    </div>
-                    <div key="2">
-                        <div className="border bg-light h-100 p-3">
-                            <AnnotationContainer importedImg={importedImg} onSelection={selectedZone} setSelection={setSelectedZone}  annoZones={annoZones}/>
                         </div>
                     </div>
 

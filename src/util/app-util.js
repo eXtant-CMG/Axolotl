@@ -1,3 +1,11 @@
+export const onlyTextLayout = {
+    lg: [{i: '1', w: 12, h:5, x:0, y:0}],
+    md: [{i: '1', w: 12, h: 4, x:0, y:0}],
+    sm: [{i: '1', w: 12, h: 4, x:0, y:0}],
+    xs: [{i: '1', w: 12, h: 4, x:0, y:0}],
+    xxs: [{i: '1', w: 12, h: 4, x:0, y:0}]
+}
+
 export const sideBySideLayout = {
     lg: [{i: '1', w: 6, h: 4, x: 0, y: 0, minW: 2, minH: 3},
         {i: '2', w: 6, h: 4, x: 6, y: 0, minW: 4, minH: 3}],

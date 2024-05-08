@@ -190,7 +190,38 @@ export default function CodeMirrorCollab({importedFile, onSelection, setSelectio
     useEffect(() => {
 
         let state = EditorState.create({
-            doc: '<p>Empty sample</p>',
+            doc: '<?xml version="1.0" encoding="UTF-8"?>\n' +
+                '<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://relaxng.org/ns/structure/1.0"?>\n' +
+                '<?xml-model href="http://www.tei-c.org/release/xml/tei/custom/schema/relaxng/tei_all.rng" type="application/xml" schematypens="http://purl.oclc.org/dsdl/schematron"?>\n' +
+                '<TEI xmlns="http://www.tei-c.org/ns/1.0">\n' +
+                '    <teiHeader>\n' +
+                '        <fileDesc>\n' +
+                '            <titleStmt>\n' +
+                '                <title><!-- title of the text --></title> \n' +
+                '                <author><!-- your name --></author> \n' +
+                '            </titleStmt>\n' +
+                '            <publicationStmt>\n' +
+                '                <p corresp="session">1</p> \n' +
+                '                <p corresp="version">1</p> \n' +
+                '                <p corresp="total_versions">1</p> \n' +
+                '            </publicationStmt>\n' +
+                '            <sourceDesc>\n' +
+                '                <p>\n' +
+                '                    <l><!-- Date of the writing session --></l> \n' +
+                '                    <l><!-- Start-time of the writing session --></l> \n' +
+                '                    <l><!-- Duration of the writing session --></l> \n' +
+                '                </p>\n' +
+                '            </sourceDesc>\n' +
+                '        </fileDesc>\n' +
+                '    </teiHeader>\n' +
+                '    <text>\n' +
+                '        <body>\n' +
+                '            <p source="keystrokes">  \n' +
+                '            \t<!-- Encode the writing process of the text here -->  \n' +
+                '            </p>\n' +
+                '        </body>\n' +
+                '    </text>\n' +
+                '</TEI>\n',
             extensions: [basicSetup, baseTheme, xml({elements: schema}),
                 errorCheckAndValidationExtension(setValidation), XMLView.of([]),
                 EditorState.allowMultipleSelections.of(true), drawSelection(),
@@ -246,26 +277,26 @@ export default function CodeMirrorCollab({importedFile, onSelection, setSelectio
         setAnnoZones(convertZonesToJson(zones));
     }
 
-    useEffect(() => {
-        if (viewRef.current) {
-            let cursor = new SearchCursor(viewRef.current?.state.doc, '#' + onSelection);
-            cursor.next()
-
-            const node = syntaxTree(viewRef.current?.state).cursorAt(cursor.value.from).node
-
-            viewRef.current?.dispatch({
-                selection: EditorSelection.create([
-                    EditorSelection.range(node.from, node.to),
-                    EditorSelection.cursor(node.from)
-                ], 1),
-                scrollIntoView: true
-            })
-
-            //TODO this is me trying to refocus after selection
-            // viewRef.current?.focus();
-            // editor.current?.firstChild.classList.add("cm-focused")
-        }
-    }, [onSelection])
+    // useEffect(() => {
+    //     if (viewRef.current) {
+    //         let cursor = new SearchCursor(viewRef.current?.state.doc, '#' + onSelection);
+    //         cursor.next()
+    //
+    //         const node = syntaxTree(viewRef.current?.state).cursorAt(cursor.value.from).node
+    //
+    //         viewRef.current?.dispatch({
+    //             selection: EditorSelection.create([
+    //                 EditorSelection.range(node.from, node.to),
+    //                 EditorSelection.cursor(node.from)
+    //             ], 1),
+    //             scrollIntoView: true
+    //         })
+    //
+    //         //TODO this is me trying to refocus after selection
+    //         // viewRef.current?.focus();
+    //         // editor.current?.firstChild.classList.add("cm-focused")
+    //     }
+    // }, [onSelection])
 
     // If parents wants us to disconnect socket, we do
     // useEffect(() => {
