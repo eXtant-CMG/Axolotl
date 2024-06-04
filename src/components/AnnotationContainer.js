@@ -1,4 +1,5 @@
 import React from "react";
+import pic from '../assets/frankenstein.jpg';
 import { getAnnotationsFromXml } from '../util/annotation-util'
 import {
     TransformWrapper,
@@ -61,7 +62,7 @@ function AnnotationContainer({onSelection}) {
                 onSelection(element.getAttribute('data-id'));
             });
 
-            annotorious.loadAnnotations(createAnnotationUrl());
+            // annotorious.loadAnnotations(createAnnotationUrl());
         }
 
         // Keep current Annotorious instance in state
@@ -90,23 +91,23 @@ function AnnotationContainer({onSelection}) {
         anno.readOnly = panOrDraw === 'draw';
     }
 
-    useEffect(() => {
-        const configuration = {
-            method: "get",
-            url: "https://axolotl-server-db50b102d293.herokuapp.com/image",
-            headers: {
-                "Authorization": `Bearer ${cookies.get("TOKEN")}`
-            },
-            responseType: 'blob'
-        };
-        axios(configuration)
-            .then((response) => {
-                setImgURL(URL.createObjectURL(response.data));
-            })
-            .catch((error) => {
-                console.log(error)
-            })
-    }, [])
+    // useEffect(() => {
+    //     const configuration = {
+    //         method: "get",
+    //         url: "https://axolotl-server-db50b102d293.herokuapp.com/image",
+    //         headers: {
+    //             "Authorization": `Bearer ${cookies.get("TOKEN")}`
+    //         },
+    //         responseType: 'blob'
+    //     };
+    //     axios(configuration)
+    //         .then((response) => {
+    //             setImgURL(URL.createObjectURL(response.data));
+    //         })
+    //         .catch((error) => {
+    //             console.log(error)
+    //         })
+    // }, [])
 
     function createAnnotationUrl() {
         const annotationJson = getAnnotationsFromXml('path')
@@ -121,7 +122,7 @@ function AnnotationContainer({onSelection}) {
             <TransformWrapper
                 initialScale={0.2} // TODO: calculate this based on image width and element width
                 minScale={0.05}
-                wheel={{disabled: true}}
+                // wheel={{disabled: true}}
                 panning={{disabled: (panOrDraw === 'draw')}}
                 // minPositionX={0}
                 // minPositionY={300}
@@ -153,13 +154,17 @@ function AnnotationContainer({onSelection}) {
                             </span>
                         </div>
                         <div className="annotation">
-                        <TransformComponent wrapperStyle={{ maxWidth: "100%", height:"100%", overflow: "hidden"}}>
+                            <TransformComponent wrapperStyle={{maxWidth: "100%", height: "100%", overflow: "hidden"}}>
 
-                            <img className=""
-                            ref={imgEl}
-                            src={imgURL}/>
+                                {/*<img className=""*/}
+                                {/*ref={imgEl}*/}
+                                {/*src={imgURL}/>*/}
 
-                        </TransformComponent>
+                                <img className=""
+                                     ref={imgEl}
+                                     src={pic}/>
+
+                            </TransformComponent>
                         </div>
                     </React.Fragment>
                 )}
