@@ -151,3 +151,20 @@
 .switcher__input--pan:checked ~ .switcher__toggle {
   left: 72px;
 }
+
+
+
+.a9s-annotation .a9s-inner, .a9s-annotation .a9s-outer {
+  stroke-width: 1px;
+  stroke-opacity: 50%;
+}
+
+.a9s-annotation:hover .a9s-inner {
+  stroke-width: 2px;
+  stroke-opacity: 80%;
+}
+
+.a9s-annotation.selected .a9s-inner, .a9s-selection .a9s-inner {
+  stroke-width: 5px;
+  stroke-opacity: 100%;
+}
