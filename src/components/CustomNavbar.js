@@ -17,15 +17,15 @@ export function CustomNavbar({loggedIn=false, helperFunctions={}}) {
                 {loggedIn ?
                     <Navbar.Collapse id="basic-navbar-nav">
                         <Nav className="me-auto">
-                            <NavDropdown title="Import" id="basic-nav-dropdown">
-                                <NavDropdown.Item onClick={helperFunctions.transkribusModal}>from Transkribus</NavDropdown.Item>
-                                <NavDropdown.Item onClick>from eScriptorium</NavDropdown.Item>
-                                <NavDropdown.Item onClick>from local file</NavDropdown.Item>
-                            </NavDropdown>
-                            <NavDropdown title="Set Layouts" id="basic-nav-dropdown">
-                                <NavDropdown.Item onClick={() => helperFunctions.resetLayout('sbs')}>Side by Side</NavDropdown.Item>
-                                <NavDropdown.Item onClick={() => helperFunctions.resetLayout('fw')}>Full-Width</NavDropdown.Item>
-                            </NavDropdown>
+                            {/*<NavDropdown title="Import" id="basic-nav-dropdown">*/}
+                            {/*    <NavDropdown.Item onClick={helperFunctions.transkribusModal}>from Transkribus</NavDropdown.Item>*/}
+                            {/*    <NavDropdown.Item onClick>from eScriptorium</NavDropdown.Item>*/}
+                            {/*    <NavDropdown.Item onClick>from local file</NavDropdown.Item>*/}
+                            {/*</NavDropdown>*/}
+                            {/*<NavDropdown title="Set Layouts" id="basic-nav-dropdown">*/}
+                            {/*    <NavDropdown.Item onClick={() => helperFunctions.resetLayout('sbs')}>Side by Side</NavDropdown.Item>*/}
+                            {/*    <NavDropdown.Item onClick={() => helperFunctions.resetLayout('fw')}>Full-Width</NavDropdown.Item>*/}
+                            {/*</NavDropdown>*/}
                         </Nav>
                         <Nav className="m1-auto">
                             <Nav.Link onClick={helperFunctions.handleLogout}>Logout</Nav.Link>
