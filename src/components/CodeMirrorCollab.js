@@ -2,7 +2,7 @@ import React, {useEffect, useRef, useState} from "react";
 import {basicSetup, EditorView} from "codemirror"
 import {ViewPlugin, drawSelection, Decoration, tooltips, keymap} from "@codemirror/view"
 import {xml} from "@codemirror/lang-xml"
-import {syntaxTree} from "@codemirror/language"
+import {indentUnit, syntaxTree} from "@codemirror/language"
 import {SearchCursor} from "@codemirror/search"
 import {ChangeSet, EditorState, Compartment, EditorSelection, StateField} from "@codemirror/state"
 import {indentWithTab} from "@codemirror/commands"
@@ -29,6 +29,7 @@ const cookies = new Cookies();
 
 const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
     autoConnect: false,
+    reconnection: true,
     query: {
         token: cookies.get("TOKEN")
     }
@@ -193,7 +194,8 @@ export default function CodeMirrorCollab({selection, disconnect}) {
                 extensions: [basicSetup, baseTheme, xml({elements: schema}), updateExtension(version, socket),
                                 errorCheckAndValidationExtension(setValidation), XMLView.of([]), parallelCursorHighlightExtension,
                                 EditorState.allowMultipleSelections.of(true), drawSelection(),
-                                tooltips({parent: document.body}), keymap.of([indentWithTab])]
+                                tooltips({parent: document.body}), keymap.of([indentWithTab]),
+                                indentUnit.of("    ")]
             });
 
             setValidation(checkXML(state.doc.toString()))
@@ -205,7 +207,6 @@ export default function CodeMirrorCollab({selection, disconnect}) {
 
         socket.on("disconnect", function(reason) {
             console.log(reason)
-            viewRef.current?.destroy();
         })
 
         return () => {
