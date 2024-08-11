@@ -29,7 +29,6 @@ const cookies = new Cookies();
 
 const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
     autoConnect: false,
-    reconnection: true,
     query: {
         token: cookies.get("TOKEN")
     }
