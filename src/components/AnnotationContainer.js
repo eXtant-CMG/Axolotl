@@ -109,7 +109,6 @@ function AnnotationContainer({onSelection}) {
     }, [])
 
     function createAnnotationUrl() {
-        return('')
         const annotationJson = getAnnotationsFromXml('path')
         const blob = new Blob([JSON.stringify(annotationJson)], {type: "application/json"})
         // const blob = new Blob([JSON.stringify('')], {type: "application/json"})
