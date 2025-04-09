@@ -4,6 +4,7 @@ import {Fragment, useState} from "react";
 import axios from "axios";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = process.env.REACT_APP_API_URL;
 
 
 export function ImportModal({show, switchShow}) {
@@ -14,7 +15,7 @@ export function ImportModal({show, switchShow}) {
 
     const handleTranskribusLogin = (e) => {
         const params = new URLSearchParams({ user: username, pw: password });
-        axios.post('https://axolotl-server-db50b102d293.herokuapp.com/transkribus-proxy', params)
+        axios.post(`${API_URL}/transkribus-proxy`, params)
             .then((result) => {
                 setSuccessfullyLoggedIn(true);
                 cookies.set("TR-TOKEN", result.data.data, {

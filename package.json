@@ -24,6 +24,7 @@
     "fast-xml-parser": "^4.0.11",
     "file-saver": "^2.0.5",
     "fortawesome": "^0.0.1-security",
+    "jwt-decode": "^4.0.0",
     "react": "^18.2.0",
     "react-bootstrap": "^2.5.0",
     "react-dom": "^18.2.0",

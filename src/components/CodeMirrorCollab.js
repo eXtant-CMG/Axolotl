@@ -25,9 +25,11 @@ import {Row} from "react-bootstrap";
 import Cookies from "universal-cookie";
 
 const cookies = new Cookies();
+const API_URL = process.env.REACT_APP_API_URL;
+
 // initialize socket but don't connect because we might not have auth yet
 
-const socket = io.connect("https://axolotl-server-db50b102d293.herokuapp.com/", {
+const socket = io.connect(API_URL, {
     autoConnect: false,
     query: {
         token: cookies.get("TOKEN")

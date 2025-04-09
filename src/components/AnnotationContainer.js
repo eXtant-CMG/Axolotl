@@ -14,6 +14,7 @@ import '@recogito/annotorious/dist/annotorious.min.css';
 import axios from "axios";
 import Cookies from "universal-cookie";
 const cookies = new Cookies();
+const API_URL = process.env.REACT_APP_API_URL;
 
 function AnnotationContainer({onSelection}) {
 
@@ -93,7 +94,7 @@ function AnnotationContainer({onSelection}) {
     useEffect(() => {
         const configuration = {
             method: "get",
-            url: "https://axolotl-server-db50b102d293.herokuapp.com/image",
+            url: `${API_URL}/image`,
             headers: {
                 "Authorization": `Bearer ${cookies.get("TOKEN")}`
             },

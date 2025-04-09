@@ -5,6 +5,7 @@ import Cookies from "universal-cookie";
 import Container from "react-bootstrap/Container";
 import {CustomNavbar} from "./CustomNavbar";
 const cookies = new Cookies();
+const API_URL = process.env.REACT_APP_API_URL;
 
 export function Login() {
     const [username, setUsername] = useState("");
@@ -14,7 +15,7 @@ export function Login() {
     const handleSubmit = (e) => {
         const configuration = {
             method: "post",
-            url: "https://axolotl-server-db50b102d293.herokuapp.com/login",
+            url: `${API_URL}/login`,
             data: {
                 username: username,
                 password,
@@ -25,7 +26,7 @@ export function Login() {
             .then((result) => {
                 cookies.set("TOKEN", result.data.token, {
                     path: "/",
-                    maxAge: 2 * 60 * 60 * 1000
+                    maxAge: 60 * 60 * 48
                 });
                 window.location.href = "/edit";
             })

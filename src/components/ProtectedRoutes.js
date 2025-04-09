@@ -1,16 +1,31 @@
-
-import React from "react";
 import { Navigate } from "react-router-dom";
-import Cookies from "universal-cookie";
+import { jwtDecode } from "jwt-decode";import Cookies from "universal-cookie";
+
 const cookies = new Cookies();
 
-// receives component and any other props represented by ...rest
-export default function ProtectedRoutes({ children }) {
+const ProtectedRoutes = ({ children }) => {
     const token = cookies.get("TOKEN");
-    if (token) {
+
+    if (!token) {
+        return <Navigate to="/" replace />;
+    }
+
+    try {
+        const decoded = jwtDecode(token);
+
+        // Check if token is expired
+        if (decoded.exp * 1000 < Date.now()) {
+            cookies.remove("TOKEN");
+            return <Navigate to="/" replace />;
+        }
+
+        // Token is valid
         return children;
+    } catch (e) {
+        // Token is malformed or can't be decoded
+        cookies.remove("TOKEN");
+        return <Navigate to="/" replace />;
     }
-    else {
-        return (<Navigate to='/' replace />);
-    }
-}
+};
+
+export default ProtectedRoutes;
